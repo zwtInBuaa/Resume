@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="朱文涛的个人技术简历：推荐大模型 Scaling、生成式推荐、LLM4Rec、Agent4Rec 与 Causal Uplift。">
+  <meta name="theme-color" content="#f6f8fc">
+  <title>朱文涛｜搜推算法工程师</title>
+  <link rel="icon" href="./assets_new/favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #f3f5f9;
+      --paper: #ffffff;
+      --paper-2: #fbfcff;
+      --ink: #111a2e;
+      --ink-2: #4c5971;
+      --ink-3: #8993a7;
+      --line: #dde3ee;
+      --line-2: #cbd5e5;
+      --blue: #315fe9;
+      --blue-soft: #edf2ff;
+      --teal: #119a8b;
+      --coral: #e77866;
+      --violet: #8059c9;
+      --gold: #c78c25;
+      --radius: 24px;
+      --shadow: 0 24px 70px rgba(30, 48, 86, .13);
+      --nav: 224px;
+      --content: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 30px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 3%, rgba(49,95,233,.13), transparent 29rem),
+        radial-gradient(circle at 16% 34%, rgba(17,154,139,.08), transparent 25rem),
+        linear-gradient(180deg, #fcfdff 0, var(--page) 36rem);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    body.modal-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, select { font: inherit; }
+    button { color: inherit; }
+    img { display: block; max-width: 100%; }
+    ::selection { color: #15203a; background: #dce5ff; }
+    .skip-link { position: fixed; z-index: 2000; top: 12px; left: 12px; padding: 10px 14px; color: #fff; background: var(--blue); border-radius: 10px; transform: translateY(-160%); }
+    .skip-link:focus { transform: translateY(0); }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+    .side-nav { position: fixed; z-index: 50; inset: 0 auto 0 0; display: flex; width: var(--nav); padding: 34px 26px; flex-direction: column; border-right: 1px solid rgba(203,213,229,.86); background: rgba(255,255,255,.88); backdrop-filter: blur(22px); }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand__mark { display: grid; width: 42px; height: 42px; place-items: center; color: #fff; border-radius: 14px; background: linear-gradient(135deg, var(--blue), var(--violet)); box-shadow: 0 9px 24px rgba(49,95,233,.25); font-size: 13px; font-weight: 850; letter-spacing: .08em; }
+    .brand strong { display: block; font-size: 15px; }
+    .brand small { display: block; color: var(--ink-3); font-size: 9px; letter-spacing: .14em; }
+    .side-nav nav { display: grid; margin-top: 68px; gap: 7px; }
+    .side-nav nav a { position: relative; padding: 9px 10px 9px 21px; color: var(--ink-3); border-radius: 11px; font-size: 13px; }
+    .side-nav nav a::before { position: absolute; top: 50%; left: 7px; width: 5px; height: 5px; content: ""; border-radius: 50%; background: #c3ccda; transform: translateY(-50%); }
+    .side-nav nav a:hover, .side-nav nav a.is-active { color: var(--ink); background: #f2f5fb; }
+    .side-nav nav a.is-active::before { background: var(--blue); box-shadow: 0 0 0 5px rgba(79,111,220,.12); }
+    .side-nav__bottom { margin-top: auto; color: var(--ink-3); font-size: 11px; }
+    .side-nav__bottom a { display: block; margin-top: 4px; color: var(--ink-2); }
+    .mobile-header { display: none; }
+    .page { margin-left: var(--nav); }
+    .shell { width: min(calc(100% - 72px), var(--content)); margin: 0 auto; }
+    .section { position: relative; padding: 96px 0; border-bottom: 1px solid var(--line); }
+    .section:nth-of-type(odd) { background: rgba(255,255,255,.34); }
+    .section-heading { display: grid; grid-template-columns: 1fr minmax(280px, 450px); align-items: end; margin-bottom: 40px; gap: 32px; }
+    .eyebrow { color: var(--blue); font: 800 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .16em; text-transform: uppercase; }
+    .section-heading h2 { margin: 9px 0 0; font-size: clamp(31px,4vw,53px); line-height: 1.12; letter-spacing: -.05em; }
+    .section-heading > p { margin: 0; color: var(--ink-2); font-size: 14px; }
+
+    .hero { position: relative; min-height: 100vh; display: flex; padding: 90px 0; align-items: center; overflow: hidden; border-bottom: 1px solid var(--line); }
+    .hero::after { position: absolute; right: -10vw; bottom: -26vw; width: 52vw; height: 52vw; content: ""; pointer-events: none; border: 1px solid rgba(49,95,233,.10); border-radius: 50%; box-shadow: 0 0 0 80px rgba(49,95,233,.025),0 0 0 160px rgba(128,89,201,.02); }
+    .hero__grid { display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: clamp(48px,7vw,100px); }
+    .hero h1 { margin: 18px 0 0; font-size: clamp(58px,8.2vw,112px); line-height: .94; letter-spacing: -.075em; }
+    .hero h1 span { display: block; margin-top: 20px; color: var(--ink-2); font-size: clamp(21px,2.5vw,34px); line-height: 1.25; letter-spacing: -.04em; }
+    .hero__lead { max-width: 700px; margin: 30px 0 0; color: var(--ink-2); font-size: 16px; }
+    .hero__lead strong { color: var(--ink); }
+    .hero__actions { display: flex; flex-wrap: wrap; margin-top: 34px; gap: 11px; }
+    .button { display: inline-flex; min-height: 45px; padding: 0 17px; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--line-2); border-radius: 12px; color: var(--ink-2); background: rgba(255,255,255,.85); font-size: 13px; font-weight: 750; }
+    .button:hover { color: var(--blue); border-color: var(--blue); }
+    .button--primary { color: #fff; border-color: var(--blue); background: var(--blue); box-shadow: 0 9px 25px rgba(79,111,220,.22); }
+    .button--primary:hover { color: #fff; background: #3f5fc8; }
+    .contact-line { display: flex; flex-wrap: wrap; margin-top: 27px; gap: 10px 22px; color: var(--ink-3); font-size: 12px; }
+    .contact-line a:hover { color: var(--blue); }
+    .hero-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); max-width: 570px; margin-top: 25px; overflow: hidden; border: 1px solid rgba(203,213,229,.9); border-radius: 16px; background: rgba(255,255,255,.72); box-shadow: 0 10px 32px rgba(34,49,82,.06); backdrop-filter: blur(12px); }
+    .hero-stat { padding: 13px 16px; }
+    .hero-stat + .hero-stat { border-left: 1px solid var(--line); }
+    .hero-stat strong { display: block; font-size: 18px; letter-spacing: -.04em; }
+    .hero-stat span { display: block; margin-top: 1px; color: var(--ink-3); font-size: 9px; }
+    .identity-card { position: relative; padding: 34px; overflow: hidden; border: 1px solid #dce3f0; border-radius: 28px; background: rgba(255,255,255,.92); box-shadow: var(--shadow); }
+    .identity-card::before { position: absolute; top: -100px; right: -85px; width: 235px; height: 235px; content: ""; border-radius: 50%; background: linear-gradient(135deg, rgba(79,111,220,.15), rgba(128,89,201,.13)); }
+    .identity-card__top { position: relative; display: flex; align-items: center; gap: 20px; }
+    .monogram { display: grid; width: 88px; height: 88px; flex: 0 0 auto; place-items: center; color: #fff; border-radius: 50%; background: linear-gradient(135deg,#4f6fdc,#8059c9 62%,#119a8b); box-shadow: 0 12px 26px rgba(79,111,220,.22); font-size: 23px; font-weight: 850; letter-spacing: .08em; }
+    .identity-card h2 { margin: 0; font-size: 25px; letter-spacing: -.035em; }
+    .identity-card__role { margin: 5px 0 0; color: var(--blue); font-size: 13px; }
+    .identity-card__quote { position: relative; margin: 30px 0 0; padding-top: 25px; color: var(--ink-2); border-top: 1px solid var(--line); font-size: 14px; }
+    .focus-list { position: relative; display: grid; margin: 28px 0 0; padding: 0; list-style: none; }
+    .focus-list li { display: grid; grid-template-columns: 34px 1fr; padding: 12px 0; gap: 13px; border-top: 1px solid var(--line); }
+    .focus-list span { color: var(--blue); font: 800 11px ui-monospace, monospace; }
+    .focus-list strong { display: block; font-size: 13px; }
+    .focus-list small { display: block; margin-top: 2px; color: var(--ink-3); font-size: 11px; }
+
+    .education-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: stretch; gap: 18px; }
+    .education-card { position: relative; padding: 30px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(160deg,#fff 0%,#fbfcff 100%); box-shadow: 0 12px 36px rgba(47,62,95,.065); }
+    .education-card::after { position: absolute; top: 0; left: 0; width: 100%; height: 4px; content: ""; background: linear-gradient(90deg,var(--blue),var(--teal)); }
+    .education-card:nth-child(2)::after { background: linear-gradient(90deg,var(--coral),var(--gold)); }
+    .education-card__meta { display: flex; justify-content: space-between; gap: 18px; color: var(--ink-3); font: 750 10px ui-monospace, monospace; }
+    .education-card h3 { margin: 22px 0 0; font-size: 24px; letter-spacing: -.035em; }
+    .education-card > p { margin: 5px 0 0; color: var(--ink-2); font-size: 13px; }
+    .education-details { display: grid; margin: 23px 0 0; padding: 0; gap: 12px; list-style: none; }
+    .education-details li { position: relative; padding-left: 18px; color: var(--ink-2); font-size: 12px; }
+    .education-details li::before { position: absolute; top: .72em; left: 1px; width: 6px; height: 6px; content: ""; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 4px rgba(49,95,233,.09); }
+    .education-card:nth-child(2) .education-details li::before { background: var(--coral); box-shadow: 0 0 0 4px rgba(231,120,102,.10); }
+    .education-details strong { color: var(--ink); }
+    .pill-row { display: flex; flex-wrap: wrap; margin-top: 23px; gap: 7px; }
+    .pill { padding: 5px 9px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; background: #f8faff; font-size: 10px; }
+
+    .company-group + .company-group { margin-top: 64px; }
+    .company-head { display: flex; margin-bottom: 20px; align-items: center; justify-content: space-between; gap: 20px; }
+    .company-head__identity { display: flex; align-items: center; gap: 13px; }
+    .company-mark { display: grid; width: 46px; height: 46px; place-items: center; color: #fff; border-radius: 14px; background: var(--company-color,var(--blue)); font-size: 13px; font-weight: 850; }
+    .company-head h3 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .company-head p, .company-head time { margin: 1px 0 0; color: var(--ink-3); font-size: 11px; }
+    .project-grid, .paper-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+    .content-card { --accent: var(--blue); --tint: var(--blue-soft); width: 100%; padding: 0; overflow: hidden; text-align: left; cursor: pointer; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: 0 10px 32px rgba(35,51,86,.065); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .content-card:hover { border-color: color-mix(in srgb,var(--accent) 35%,var(--line)); box-shadow: 0 18px 48px rgba(47,62,95,.12); transform: translateY(-3px); }
+    .content-card:focus-visible { outline: 3px solid color-mix(in srgb,var(--accent) 40%,transparent); outline-offset: 4px; }
+    .card-cover { position: relative; padding: 18px; background: linear-gradient(135deg,var(--tint),#fff); border-bottom: 1px solid var(--line); }
+    .card-cover::after { position: absolute; inset: auto 17px 12px auto; padding: 4px 8px; content: attr(data-label); color: #fff; border-radius: 7px; background: color-mix(in srgb,var(--accent) 88%,#172033); font: 750 9px ui-monospace,monospace; letter-spacing: .05em; }
+    .card-cover img { width: 100%; aspect-ratio: 16/9; object-fit: contain; border: 1px solid rgba(34,48,74,.10); border-radius: 14px; background: #fff; box-shadow: 0 9px 24px rgba(35,51,86,.07); }
+    .card-body { padding: 23px 24px 21px; }
+    .card-kicker { color: var(--accent); font: 800 10px ui-monospace,monospace; letter-spacing: .10em; text-transform: uppercase; }
+    .content-card h4 { margin: 9px 0 0; font-size: 23px; line-height: 1.34; letter-spacing: -.035em; }
+    .card-contribution { min-height: 68px; margin: 13px 0 0; color: var(--ink-2); font-size: 13px; }
+    .card-contribution strong { color: var(--ink); }
+    .tag-row { display: flex; flex-wrap: wrap; margin-top: 18px; gap: 7px; }
+    .tag { padding: 5px 8px; color: color-mix(in srgb,var(--accent) 82%,#26334a); border: 1px solid color-mix(in srgb,var(--accent) 22%,var(--line)); border-radius: 8px; background: color-mix(in srgb,var(--accent) 8%,#fff); font: 750 9px ui-monospace,monospace; }
+    .card-metrics { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--line); }
+    .card-metrics > div { padding: 15px 17px; }
+    .card-metrics > div + div { border-left: 1px solid var(--line); }
+    .card-metrics strong { display: block; font-size: 15px; letter-spacing: -.02em; }
+    .card-metrics small { display: block; margin-top: 3px; color: var(--ink-3); font-size: 9px; }
+    .card-action { display: flex; padding: 14px 24px; align-items: center; justify-content: space-between; color: var(--ink-2); border-top: 1px solid var(--line); font-size: 11px; }
+    .content-card:hover .card-action { color: var(--accent); }
+    .paper-card .card-body { min-height: 236px; display: flex; flex-direction: column; }
+    .paper-card h4 { font-size: 20px; }
+    .paper-card .card-contribution { min-height: 0; }
+    .paper-card .tag-row { margin-top: auto; padding-top: 17px; }
+    .honor-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
+    .honor-card { position: relative; min-height: 240px; padding: 24px; display: flex; flex-direction: column; overflow: hidden; }
+    .honor-card::before { position: absolute; top: -45px; right: -45px; width: 130px; height: 130px; content: ""; border-radius: 50%; background: var(--tint); }
+    .honor-card__index { color: var(--accent); font: 800 11px ui-monospace,monospace; }
+    .honor-card h4 { position: relative; margin-top: 38px; font-size: 18px; }
+    .honor-card p { position: relative; margin: 10px 0 0; color: var(--ink-3); font-size: 11px; }
+    .honor-card .card-action { margin: auto -24px -24px; }
+    .footer { padding: 50px 0; color: var(--ink-3); font-size: 11px; }
+    .footer .shell { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+
+    .modal { position: fixed; z-index: 1000; inset: 0; display: none; padding: 24px; overflow-y: auto; overscroll-behavior: contain; background: rgba(25,34,52,.46); backdrop-filter: blur(9px); -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+    .modal.is-open { display: block; }
+    .modal__dialog { width: min(1180px,100%); margin: 0 auto; display: flex; flex-direction: column; height: min(calc(100vh - 48px), 940px); max-height: calc(100vh - 48px); overflow: hidden; border: 1px solid rgba(255,255,255,.66); border-radius: 26px; background: var(--paper); box-shadow: 0 35px 100px rgba(27,38,63,.28); }
+    .modal__top { position: sticky; z-index: 6; top: 0; display: grid; grid-template-columns: 1fr auto; min-height: 66px; padding: 11px 15px 11px 25px; align-items: center; gap: 18px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.94); backdrop-filter: blur(15px); }
+    .modal__top-title { min-width: 0; }
+    .modal__top-title strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+    .modal__top-title span { display: block; margin-top: 2px; color: var(--ink-3); font: 750 9px ui-monospace,monospace; }
+    .modal__close { display: grid; width: 41px; height: 41px; place-items: center; cursor: pointer; border: 1px solid var(--line); border-radius: 50%; color: var(--ink-2); background: #f8faff; font-size: 20px; }
+    .modal__close:hover { color: var(--blue); border-color: var(--blue); }
+    .story-stage { flex: 1; min-height: 0; overflow: hidden; }
+    .story-slide { display: flex; flex-direction: column; height: 100%; min-height: 0; animation: slide-in .20s ease both; }
+    @keyframes slide-in { from { opacity: .35; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
+    .story-pane { min-width: 0; min-height: 0; }
+    .story-step { color: var(--story-accent,var(--blue)); font: 850 9px ui-monospace,monospace; letter-spacing: .14em; }
+    .story-pane--copy { flex: 0 1 auto; max-height: 40%; min-height: 0; padding: clamp(14px,1.8vw,22px) clamp(24px,2.6vw,40px) clamp(6px,1vw,10px); overflow-y: auto; }
+    .story-pane--copy::-webkit-scrollbar { width: 6px; }
+    .story-pane--copy::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 6px; }
+    .story-pane--copy h2 { margin: 8px 0 0; font-size: clamp(20px,2.2vw,28px); line-height: 1.12; letter-spacing: -.03em; }
+    .story-lead { margin: 8px 0 0; color: var(--ink-2); font-size: 12px; line-height: 1.55; }
+    .story-copy { margin-top: 12px; color: var(--ink-2); font-size: 12px; line-height: 1.55; }
+    .story-copy > :first-child { margin-top: 0; }
+    .story-copy strong { color: var(--ink); }
+    .number-list { display: grid; margin: 0; padding: 0; gap: 6px; list-style: none; counter-reset: item; }
+    .number-list li { position: relative; padding-left: 28px; counter-increment: item; font-size: 11.5px; line-height: 1.45; }
+    .number-list li::before { position: absolute; top: 1px; left: 0; display: grid; width: 20px; height: 20px; place-items: center; content: counter(item,decimal-leading-zero); color: var(--story-accent,var(--blue)); border: 1px solid color-mix(in srgb,var(--story-accent,var(--blue)) 25%,var(--line)); border-radius: 6px; background: var(--story-tint,#edf2ff); font: 850 7px ui-monospace,monospace; }
+    .story-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .story-chip { padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: linear-gradient(145deg,#fff,var(--story-tint,#edf2ff)); }
+    .story-chip strong { display: block; color: var(--ink); font-size: 12px; letter-spacing: -.01em; }
+    .story-chip span { display: block; margin-top: 1px; color: var(--ink-3); font-size: 8px; }
+    .output-list { display: flex; flex-wrap: wrap; margin: 10px 0 0; padding: 0; gap: 5px; list-style: none; }
+    .output-list li, .output-list a { padding: 4px 8px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 7px; background: #f8faff; font-size: 10px; }
+    .output-list a:hover { color: var(--story-accent,var(--blue)); border-color: var(--story-accent,var(--blue)); }
+    .story-note { margin-top: 10px; color: var(--ink-3); font-size: 9px; }
+    .story-pane--figure { flex: 1 1 0; min-height: 0; padding: clamp(6px,1vw,12px) clamp(24px,2.6vw,40px) clamp(14px,1.8vw,22px); display: flex; background: linear-gradient(180deg,#fff,var(--story-tint,#edf2ff) 92%); border-top: 1px solid var(--line); }
+    .story-figure { margin: 0; flex: 1 1 100%; min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+    .story-figure img { flex: 1 1 auto; min-height: 0; width: 100%; object-fit: contain; border: 1px solid rgba(34,48,74,.12); border-radius: 12px; background: #fff; box-shadow: 0 10px 28px rgba(47,62,95,.11); }
+    .story-figure figcaption { color: var(--ink-3); font-size: 10px; text-align: center; max-width: 92%; }
+    @media (max-width: 850px) { .story-pane--copy { max-height: 40%; } .story-pane--figure { min-height: 200px; } }
+    .modal__footer { position: sticky; z-index: 5; bottom: 0; display: grid; grid-template-columns: 145px 1fr 145px; min-height: 72px; padding: 11px 20px; align-items: center; gap: 15px; border-top: 1px solid var(--line); background: rgba(255,255,255,.95); backdrop-filter: blur(14px); }
+    .slide-button { min-height: 42px; cursor: pointer; border: 1px solid var(--line-2); border-radius: 11px; color: var(--ink-2); background: #fff; font-size: 12px; font-weight: 750; }
+    .slide-button:hover:not(:disabled) { color: var(--story-accent,var(--blue)); border-color: var(--story-accent,var(--blue)); }
+    .slide-button:disabled { opacity: .35; cursor: default; }
+    .slide-dots { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .slide-dot { width: 7px; height: 7px; padding: 0; cursor: pointer; border: 0; border-radius: 999px; background: #cdd5e2; transition: width .16s ease,background .16s ease; }
+    .slide-dot.is-active { width: 25px; background: var(--story-accent,var(--blue)); }
+    .swipe-hint { display: none; text-align: center; color: var(--ink-3); font-size: 9px; }
+    @media (max-width: 1100px) { .side-nav { display: none; } .mobile-header { position: sticky; z-index: 100; top: 0; display: flex; min-height: 63px; padding: 10px 18px; align-items: center; justify-content: space-between; gap: 14px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.93); backdrop-filter: blur(16px); } .mobile-header .brand__mark { width: 38px; height: 38px; } .mobile-header select { min-width: 150px; padding: 9px 34px 9px 12px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; background: #fff; font-size: 12px; } .page { margin-left: 0; } html { scroll-padding-top: 80px; } .hero { min-height: auto; } }
+    @media (max-width: 850px) { .shell { width: min(calc(100% - 36px),var(--content)); } .section { padding: 72px 0; } .section-heading, .hero__grid { grid-template-columns: 1fr; } .education-grid, .project-grid, .paper-grid { grid-template-columns: 1fr; } .honor-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .company-head { align-items: flex-start; } .story-head { grid-template-columns: 1fr; } .story-head__cover { min-height: 300px; } .metric-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+    @media (max-width: 590px) { .mobile-header .brand strong, .mobile-header .brand small { display: none; } .hero { padding: 76px 0; } .hero h1 { font-size: 61px; } .hero__actions .button { width: 100%; } .hero-stats { grid-template-columns: 1fr; } .hero-stat + .hero-stat { border-top: 1px solid var(--line); border-left: 0; } .identity-card { padding: 24px; } .monogram { width: 70px; height: 70px; } .company-head { flex-direction: column; } .company-head time { padding-left: 59px; margin-top: -15px; } .card-metrics { grid-template-columns: 1fr; } .card-metrics > div + div { border-top: 1px solid var(--line); border-left: 0; } .honor-grid { grid-template-columns: 1fr; } .modal { padding: 0; } .modal__dialog { min-height: 100vh; min-height: 100dvh; margin: 0; border: 0; border-radius: 0; } .story-head__copy { padding: 34px 21px; } .story-head__cover { min-height: 230px; padding: 20px; } .story-main { padding: 34px 20px 44px; } .figure-gallery, .metric-grid { grid-template-columns: 1fr; } .figure-card--wide { grid-column: auto; } .modal__footer { grid-template-columns: 1fr 1fr; padding: 10px 13px; } .slide-dots { grid-column: 1/-1; grid-row: 1; } .swipe-hint { display: block; } .footer .shell { align-items: flex-start; flex-direction: column; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *,*::before,*::after { animation: none !important; transition: none !important; } }
+    @media print { .side-nav,.mobile-header,.button,.card-action,.modal { display:none!important; } .page { margin:0; } body { background:#fff; } .content-card,.education-card,.identity-card { box-shadow:none; break-inside:avoid; } }
+    .lightbox { position: fixed; z-index: 2000; inset: 0; display: none; align-items: center; justify-content: center; padding: 36px; background: rgba(13,18,28,.84); backdrop-filter: blur(6px); }
+    .lightbox.is-open { display: flex; }
+    .lightbox__close { position: fixed; top: 18px; right: 22px; z-index: 2; width: 44px; height: 44px; display: grid; place-items: center; cursor: pointer; border: 0; border-radius: 50%; color: #fff; background: rgba(255,255,255,.16); backdrop-filter: blur(8px); font-size: 26px; line-height: 1; }
+    .lightbox__close:hover { background: rgba(255,255,255,.30); }
+    .lightbox__img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; box-shadow: 0 24px 70px rgba(0,0,0,.55); }
+    .story-figure img { cursor: zoom-in; }
+    @media (max-width: 590px) { .lightbox { padding: 0; } .lightbox__close { top: 12px; right: 12px; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <aside class="side-nav" aria-label="页面目录"><a class="brand" href="#profile"><span class="brand__mark">ZW</span><span><strong>朱文涛</strong><small>ALGORITHM · REC</small></span></a><nav><a class="is-active" href="#profile">个人简介</a><a href="#education">教育背景</a><a href="#experience">重点项目</a><a href="#publications">学术论文</a><a href="#honors">竞赛荣誉</a></nav><div class="side-nav__bottom"><span>2027 届 · 秋招</span><a href="mailto:zwt15609638530@163.com">zwt15609638530@163.com</a></div></aside>
+  <header class="mobile-header"><a class="brand" href="#profile"><span class="brand__mark">ZW</span><span><strong>朱文涛</strong><small>TECH RESUME</small></span></a><label><span class="visually-hidden">页面目录</span><select id="mobile-nav"><option value="profile">个人简介</option><option value="education">教育背景</option><option value="experience">重点项目</option><option value="publications">学术论文</option><option value="honors">竞赛荣誉</option></select></label></header>
+  <main class="page" id="main">
+    <section class="hero" id="profile" data-section><div class="shell hero__grid"><div><span class="eyebrow">SEARCH · RECOMMENDATION · ADS</span><h1>朱文涛<span>搜推算法工程师｜模型创新 × 工业落地</span></h1><p class="hero__lead">北京航空航天大学计算机硕士，聚焦 <strong>推荐大模型 Scaling、生成式搜推、LLM4Rec、Agent4Rec 与 Causal Uplift</strong>。实习覆盖美团统一精排、快手直播生成式推荐、TikTok Search LLM 召回与阿里妈妈因果决策。</p><div class="hero__actions"><a class="button button--primary" href="#experience">查看 8 个实习项目 ↘</a><a class="button" href="./assets_new/resume/朱文涛-北航-秋招简历-0817.pdf" target="_blank" rel="noreferrer">下载简历 PDF ↗</a></div><div class="contact-line"><a href="tel:15609638530">156 0963 8530</a><a href="mailto:zwt15609638530@163.com">zwt15609638530@163.com</a><span>北京</span></div><div class="hero-stats" aria-label="个人概览"><div class="hero-stat"><strong>4 段</strong><span>头部互联网算法实习</span></div><div class="hero-stat"><strong>8 个</strong><span>独立工业项目</span></div><div class="hero-stat"><strong>3.81</strong><span>硕士 GPA / 4.00</span></div></div></div><article class="identity-card"><div class="identity-card__top"><div class="monogram">ZW</div><div><h2>Research × Engineering</h2><p class="identity-card__role">推荐系统模型与决策一体化</p></div></div><p class="identity-card__quote">“从机制假设、模型结构到训推链路和线上指标，形成可解释、可复现、可落地的完整闭环。”</p><ul class="focus-list"><li><span>01</span><div><strong>Foundation Ranking</strong><small>MTFM · HSTU · Efficient Scaling</small></div></li><li><span>02</span><div><strong>Generative Recommendation</strong><small>Dynamic SID · MTP · Recall & Rank</small></div></li><li><span>03</span><div><strong>LLM for Search & Rec</strong><small>SFT · DPO · Personalized Query</small></div></li><li><span>04</span><div><strong>Agent & Causal Decision</strong><small>Attribution · Uplift · Policy</small></div></li></ul></article></div></section>
+    <section class="section" id="education" data-section><div class="shell"><div class="section-heading"><div><span class="eyebrow">01 / EDUCATION</span><h2>教育背景</h2></div><p>本硕均就读于北京航空航天大学；从扎实数理基础与竞赛训练，延伸到数据挖掘、序列推荐和 LLM4Rec 研究。</p></div><div class="education-grid"><article class="education-card"><div class="education-card__meta"><span>硕士研究生</span><span>2024.09 — 至今</span></div><h3>北京航空航天大学</h3><p>计算机学院 · 计算机技术｜软件开发环境国家重点实验室</p><ul class="education-details"><li><strong>学业水平：</strong>GPA 3.81 / 4.00，成绩排名前 10%</li><li><strong>研究方向：</strong>数据挖掘、序列推荐、LLM4Rec</li><li><strong>荣誉与组织：</strong>一等奖学金、学术部骨干</li></ul><div class="pill-row"><span class="pill">国家重点实验室</span><span class="pill">GPA 3.81</span><span class="pill">Top 10%</span><span class="pill">LLM4Rec</span></div></article><article class="education-card"><div class="education-card__meta"><span>工学学士</span><span>2020.09 — 2024.06</span></div><h3>北京航空航天大学</h3><p>计算机学院 · 计算机科学与技术｜免试推荐攻读研究生</p><ul class="education-details"><li><strong>学业水平：</strong>GPA 3.87 / 4.00，综合成绩前 10%，免试保研</li><li><strong>荣誉奖励：</strong>近 20 项，含世界级 1 项、国家级 2 项；学科竞赛特等奖、学业奖学金</li><li><strong>竞赛表现：</strong>连续三年数学竞赛一等奖、物理竞赛省二等奖、美赛 M 奖、国赛省一等奖</li><li><strong>综合荣誉：</strong>三好学生、优秀毕业生、优秀志愿者</li></ul><div class="pill-row"><span class="pill">GPA 3.87</span><span class="pill">Top 10%</span><span class="pill">免试保研</span><span class="pill">近 20 项荣誉</span></div></article></div></div></section>
+    <section class="section" id="experience" data-section><div class="shell"><div class="section-heading"><div><span class="eyebrow">02 / PROJECTS</span><h2>实习与重点项目</h2></div><p>4 段实习各精选 2 个独立项目。卡片使用项目封面，详情严格按新目录中的编号图顺序逐屏讲解，收益指标与对应实验图同屏呈现。</p></div><div id="project-groups"></div></div></section>
+    <section class="section" id="publications" data-section><div class="shell"><div class="section-heading"><div><span class="eyebrow">03 / PUBLICATIONS</span><h2>学术论文</h2></div><p>每篇论文使用核心方法图作为封面，并在卡片上直接说明个人角色和方法贡献。</p></div><div class="paper-grid" id="paper-grid"></div></div></section>
+    <section class="section" id="honors" data-section><div class="shell"><div class="section-heading"><div><span class="eyebrow">04 / HONORS</span><h2>竞赛与个人荣誉</h2></div><p>数学基础、开放问题建模、技术表达与综合能力证明。</p></div><div class="honor-grid" id="honor-grid"></div></div></section>
+    <footer class="footer"><div class="shell"><span>© 2026 朱文涛 · Native HTML / CSS / JavaScript</span><a href="#profile">返回顶部 ↑</a></div></footer>
+  </main>
+  <div class="modal" id="story-modal" aria-hidden="true"><div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal__top"><div class="modal__top-title"><strong id="modal-title">项目详情</strong><span id="modal-progress">01 / 05</span></div><button class="modal__close" type="button" aria-label="关闭弹窗">×</button></div><div class="story-stage" id="story-stage"></div><div class="modal__footer"><button class="slide-button" id="prev-slide" type="button">← 上一屏</button><div><div class="slide-dots" id="slide-dots"></div><div class="swipe-hint">可左右滑动切换</div></div><button class="slide-button" id="next-slide" type="button">下一屏 →</button></div></div></div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true"><button class="lightbox__close" type="button" aria-label="关闭全屏图">×</button><img class="lightbox__img" id="lightbox-img" alt="技术图放大查看"></div>
+
+  <script>
+    (() => {
+      const A = './assets/';
+      const N = './assets_new/';
+      const I = N + 'intern/';
+      const P = N + 'paper/';
+      const palettes = { blue:{accent:'#4f6fdc',tint:'#edf2ff'},teal:{accent:'#119a8b',tint:'#e9f8f5'},coral:{accent:'#e77866',tint:'#fff0ed'},violet:{accent:'#8059c9',tint:'#f2edfb'},gold:{accent:'#c78c25',tint:'#fff7e7'},cyan:{accent:'#2689a7',tint:'#eaf7fb'} };
+      const img=(file,caption,wide=false)=>({src:A+file,caption,wide});
+      const metric=(value,label)=>({value,label});
+      const slide=(step,title,lead,cover,bodyTitle,body,images=[],metrics=[],outputs=[],links=[],note='')=>({step,title,lead,cover,bodyTitle,body,images,metrics,outputs,links,note});
+
+      /* Previous project data retained only as source history; the optimized assets_new stories below are rendered.
+      const legacyProjects = [
+        {
+          id:'mtfm',company:'美团',role:'主站搜推算法组',period:'2025.04 — 2025.10',palette:'blue',title:'MTFM 多业务统一精排',cover:A+'mtfm_arch.png',label:'UNIFIED RANKING',
+          contribution:'将多业务、多序列、多目标重构为统一异构 Token 序列，用 HSTU 主干完成端到端精排。',tags:['HSTU','异构 Token','User-level Sample'],cardMetrics:[metric('>1.5pp','CTR-GAUC'),metric('+0.51pp','CXR-GAUC'),metric('100TB','数据规模')],
+          slides:[
+            slide('01 / 背景','为什么需要统一精排底座','外卖多业务长期维护多套独立模型，样本、用户计算与模型参数重复；传统 DLRM 又把序列建模和高阶交互拆成两段，难以继续扩展。',A+'mtgr_arch1.png','业务问题','<p>目标不是简单把模型拼在一起，而是统一样本组织、Token 表示、注意力可见性与多任务学习，让一套主干同时吸收跨场景知识。</p>',[img('mtgr_arch1.png','传统 DLRM 与统一序列建模对比',true)]),
+            slide('02 / 样本','用户粒度聚合样本','把 request 级实例聚合为 user-level 样本，同一用户当天的画像与行为只存储、编码一次。',A+'mtgr_sample.png','核心贡献','<ol class="number-list"><li><strong>天级 UG 分离：</strong>用户侧与目标侧样本解耦。</li><li><strong>统一上下文：</strong>一个样本承载多场景、多请求和多候选目标。</li><li><strong>计算复用：</strong>降低存储和重复用户计算，样本生产效率提升 57%。</li></ol>',[img('mtgr_sample.png','Request 样本聚合为 User-level 样本',true)],[metric('+57%','样本生产效率')]),
+            slide('03 / 架构','异构 Token 的统一 HSTU 主干','用户画像、历史/近期/实时行为、候选商家和商品被转换为不同语义类型的 Token，在统一 Transformer 内交互。',A+'mtfm_arch.png','结构创新','<ol class="number-list"><li><strong>Alignment-free：</strong>无需把不同场景强行补齐到同一稠密槽位。</li><li><strong>动态混合因果掩码：</strong>按 Token 类型控制可见性，避免标签和未来信息穿越。</li><li><strong>分组层归一化：</strong>对齐画像、行为和目标 Token 的不同数值空间。</li><li><strong>多业务解耦：</strong>EPNet + Sparse-MoE 缓解目标间跷跷板效应。</li></ol>',[img('mtfm_arch.png','MTFM 多业务统一架构',true)]),
+            slide('04 / 结果','统一模型的 Scaling 收益','数据与参数扩展带来稳定离线增益，并在多业务上线。',A+'mtfm_scaling_exp.png','量化结果','<p>在数据规模扩展至 100TB、模型规模提升到 0.2B 的过程中验证工业推荐 Scaling Law；随后通过高效结构继续扩展到 0.8B。</p>',[img('mtfm_scaling_exp.png','数据规模与参数规模 Scaling 实验',true)],[metric('>1.5pp','神抢手 / 拼好饭 CTR-GAUC'),metric('+0.51pp','搜索 CXR-GAUC'),metric('100TB','多场景训练数据')]),
+            slide('05 / 产出','从技术方案到业务底座','统一精排模型完成业务落地，并沉淀公开报告与内部成果。',A+'mtfm_arch.png','成果','<p>负责样本组织、异构 Token 建模和高效 Scaling 方案设计与验证，形成从离线实验到线上链路的完整闭环。</p>',[],[],['外卖精排业务全量上线','MTFM Technical Report','内部技术报告与专利'],[{label:'MTFM v1 ↗',href:'https://arxiv.org/abs/2602.11235v1'},{label:'MTGR ↗',href:'https://arxiv.org/abs/2505.18654'}])
+          ]
+        },
+        {
+          id:'scaling',company:'美团',role:'主站搜推算法组',period:'2025.04 — 2025.10',palette:'teal',title:'高效 Scaling：HTA / SCTA / UG-Sep',cover:A+'hta_scta.png',label:'EFFICIENT SCALING',
+          contribution:'重新分配异构 Token 的算力：混合注意力、Target Token 拆分与用户 KV 复用支撑 0.2B→0.8B。',tags:['HTA','SCTA','Semi-Local','UG-Sep'],cardMetrics:[metric('+100%','训练吞吐'),metric('+39.1%','训练 MFU'),metric('+0.32%','列表收入')],
+          slides:[
+            slide('01 / 瓶颈','为什么常规扩参不可持续','异构 Token 的语义密度不一致，全量 Attention 把大量算力消耗在低价值交互；Target Token 增长后，Query 数量又成为新的复杂度瓶颈。',A+'hta_scta.png','优化目标','<p>在效果不退化的前提下，让计算量随关键交互而不是随所有 Token 的笛卡尔积增长，同时满足在线 TP99。</p>',[img('hta_scta.png','异构 Token 的注意力与计算重排',true)]),
+            slide('02 / HTA','Full Attention 与 Target Attention 交错','用少量 Full Attention 完成全局信息传播，多层 Target Attention 聚焦候选侧；GQA 进一步压缩 KV Cache。',A+'hta_scta.png','核心贡献','<ol class="number-list"><li><strong>混合层级：</strong>单层全注意力与多层目标注意力交错。</li><li><strong>Target Token Split-Up：</strong>拆分目标语义并配置 per-token FFN，提高目标侧容量。</li><li><strong>GQA：</strong>减少 KV 头数，降低显存和带宽压力。</li></ol>',[img('hta_scta.png','HTA 与 Target Token Split-Up',true)],[metric('+100%','训练吞吐'),metric('效果持平','HTA 对比 Full Attention')]),
+            slide('03 / SCTA','重排 Target Attention 计算顺序','SCTA 把可复用的用户侧计算前移，Semi-Local Attention 控制局部交互范围，缓解 Query Token 膨胀。',A+'hta_scta.png','结构创新','<ol class="number-list"><li><strong>计算重排：</strong>在数学语义保持一致的前提下减少重复中间结果。</li><li><strong>Semi-Local：</strong>让复杂度接近线性。</li><li><strong>在线友好：</strong>把训练侧结构优化同步映射到推理 Kernel 和缓存布局。</li></ol>',[img('hta_scta.png','SCTA 计算重排与 Semi-Local Attention',true)]),
+            slide('04 / UG-Sep','用户表征只计算一次','多个候选共享用户 Token 与 KV 表征；在 RankMixer 交叉 Token 翻倍时，整体复杂度基本不变。',A+'mtgr_sample.png','复用机制','<p>用户侧建模与目标侧交叉解耦，使离线批训练、在线多候选推理都可以共享用户计算。</p>',[img('mtgr_sample.png','用户粒度聚合为 UG-Sep 提供样本基础'),img('mtfm_scaling_exp.png','0.2B 到 0.8B 的扩展曲线')],[metric('0.2B → 0.8B','模型规模'),metric('+0.15pp','RankMixer 离线 AUC')]),
+            slide('05 / 结果','效果、效率与业务收益同时成立','高效结构使更大模型在相近训练速度下可落地，并完成首页列表实验。',A+'mtfm_scaling_exp.png','量化收益','<p>结构、Kernel 与缓存策略联合优化，避免只看 FLOPs 而忽略真实吞吐和在线延迟。</p>',[],[metric('+39.1%','训练 MFU'),metric('+42.0%','推理 MFU'),metric('−30%','在线 TP99'),metric('+0.32%','首页列表收入'),metric('+0.22%','订单量'),metric('0.8B','最终扩展规模')],['业务全量上线','高效 Scaling 技术报告','内部专利'])
+          ]
+        },
+        {
+          id:'tokenizer',company:'快手',role:'直播模型组',period:'2025.10 — 2026.01',palette:'coral',title:'直播多模态 Tokenizer 与流式 SID',cover:A+'onelive_tokenizer.png',label:'DYNAMIC TOKENIZER',
+          contribution:'用多模态门控与流式 RQ-VAE 让 SID 感知直播内容变化，并以稳定性指标约束码本漂移。',tags:['RQ-VAE','Res-Kmeans','LFQ','Multi-modal'],cardMetrics:[metric('+52%','聚类准确度'),metric('80.9%','曝光占比'),metric('+0.39%','极速间时长')],
+          slides:[
+            slide('01 / 背景','直播需要动态 Semantic ID','直播截图、评论、ASR 和主播状态持续变化，静态 ID 难以表达；普通 RQ-VAE 又存在码本坍塌、冲突和 SID 抖动。',A+'onelive_tokenizer.png','业务问题','<p>目标是让 SID 同时具备实时语义、协同信息和稳定索引能力，既能随内容更新，又不能在相邻时刻频繁跳变。</p>',[img('onelive_tokenizer.png','直播多模态特征到 SID 的完整链路',true)]),
+            slide('02 / 表征','多模态语义蒸馏与动态融合','融合直播截图、主播信息、评论和 ASR，由大模型构造语义描述并蒸馏到轻量模型，Gate 动态平衡语义与协同信号。',A+'onelive_tokenizer.png','核心贡献','<ol class="number-list"><li><strong>统一语义 Embedding：</strong>将不同模态映射到直播语义空间。</li><li><strong>动态 Gate：</strong>根据直播内容和行为置信度融合多模态与协同表征。</li><li><strong>流式更新：</strong>支持直播状态变化后的近实时编码。</li></ol>',[img('onelive_tokenizer.png','多模态描述蒸馏与门控融合',true)],[metric('+52%','聚类准确度'),metric('+0.39%','极速间内时长')]),
+            slide('03 / 码本','Res-Kmeans + RQ-VAE + LFQ','以 Res-Kmeans 初始化残差码本，联合聚类约束、对比学习与频控；末层 LFQ 降低热门直播冲突。',A+'semantic_distill.png','结构创新','<ol class="number-list"><li><strong>防坍塌：</strong>死码剔除和分布均衡约束提升码字利用率。</li><li><strong>防抖动：</strong>频率控制抑制相邻时刻 SID 无意义变化。</li><li><strong>防冲突：</strong>LFQ 扩充尾层组合容量。</li></ol>',[img('semantic_distill.png','Res-Kmeans / LFQ 混合码本与语义约束',true)]),
+            slide('04 / 评价','不只看重建误差','建立序一致性、漂移率、类内一致性、分布熵和下游精排增益组成的多维评价体系。',A+'semantic_distill.png','评价闭环','<p>码本质量必须同时满足“语义相近、索引稳定、分布均衡、下游有效”，避免单一重建指标与业务脱节。</p>',[],[metric('5 类','码本评价维度'),metric('65.2% → 80.9%','OneLive 曝光占比')]),
+            slide('05 / 产出','直播 SID 底座落地','动态 Tokenizer 支撑后续生成式召回、语义蒸馏和召粗一体模型。',A+'onelive_tokenizer.png','成果','<p>从表征数据、Token 构建、稳定性约束到线上更新形成完整链路。</p>',[],[],['OneLive 直播业务全量上线','内部技术报告与专利'],[{label:'OneLive 论文 ↗',href:'https://arxiv.org/abs/2602.08612'}])
+          ]
+        },
+        {
+          id:'gr-optimization',company:'快手',role:'直播模型组',period:'2025.10 — 2026.01',palette:'violet',title:'GR 效果与效率优化',cover:A+'mtp_arch.png',label:'MTP + DISTILLATION',
+          contribution:'Sequential MTP 复用浅层参数与 KV Cache 提升解码 QPS；全局语义蒸馏同步提升 Hit。',tags:['Sequential MTP','KV Cache','Contrastive Distill'],cardMetrics:[metric('+88.12%','单机 QPS'),metric('+6.8%','Hit@128'),metric('100 张','A10 节省')],
+          slides:[
+            slide('01 / 问题','自回归 SID 解码太慢','直播 SID 需要逐 Token 生成，常规 MTP 若并行预测多个位置，会忽略前序 SID 的层级语义并带来效果损失。',A+'mtp_arch.png','优化目标','<p>在不牺牲 Hit 的前提下减少完整 Decoder 调用次数，同时让辅助预测头显式利用前序 SID。</p>',[img('mtp_arch.png','自回归解码与 Sequential MTP 对比',true)]),
+            slide('02 / 效率','Sequential Multi-Token Prediction','依次草拟后续 SID Token，复用前序语义、主干浅层参数和 KV Cache；验证通过后减少完整解码步骤。',A+'mtp_arch.png','核心贡献','<ol class="number-list"><li><strong>序列条件化：</strong>第 k 个草拟 Token 依赖已生成的 SID 前缀。</li><li><strong>参数复用：</strong>共享浅层 Decoder，避免为每个位置维护完整分支。</li><li><strong>缓存复用：</strong>沿用用户前缀和 SID 轨迹 KV Cache。</li></ol>',[img('mtp_arch.png','Sequential MTP 的训练与推理结构',true)],[metric('0.925k → 1.74k','单机 QPS'),metric('+88.12%','吞吐提升'),metric('100 张 A10','资源节省')]),
+            slide('03 / 效果','全局语义蒸馏','以多模态 Embedding 为教师信号，通过特殊距离 Token 对完整 SID 序列做对比语义蒸馏。',A+'semantic_distill.png','核心贡献','<ol class="number-list"><li><strong>序列级监督：</strong>不只约束单个码字，而是对齐完整 SID 的全局语义。</li><li><strong>冲突补偿：</strong>缓解离散码本碰撞造成的语义损失。</li><li><strong>训练统一：</strong>蒸馏目标与生成 CE Loss 联合优化。</li></ol>',[img('semantic_distill.png','多模态教师信号与全局语义蒸馏',true)],[metric('+6.8%','Hit@128')]),
+            slide('04 / 在线','离线 Hit 转化为观看收益','效率优化释放线上容量，语义蒸馏提升召回质量，两者共同完成业务实验。',A+'semantic_distill.png','量化结果','<p>用单列外流与 LTV1 观看时长验证生成质量是否真正转化为长期消费价值。</p>',[],[metric('+0.853%','单列外流间内时长'),metric('+0.961%','LTV1 直播时长'),metric('+6.8%','Hit@128')]),
+            slide('05 / 产出','高效生成链路落地','MTP 与语义蒸馏成为 OneLive 生成式召回的重要模块。',A+'mtp_arch.png','成果','<p>同时优化解码效率与 SID 语义质量，避免“只提速不提效”或“只涨 Hit 无法上线”。</p>',[],[],['快手直播业务全量上线','节省 100 张 A10','内部技术报告与专利'],[{label:'OneLive 论文 ↗',href:'https://arxiv.org/abs/2602.08612'}])
+          ]
+        },
+        {
+          id:'unir2',company:'快手',role:'直播模型组',period:'2025.10 — 2026.01',palette:'cyan',title:'UniR² 召回排序一体',cover:A+'unir2_arch.png',label:'RECALL + RANK',
+          contribution:'在同一 Decoder 复用用户前缀、SID 轨迹与 QKV 主干，以 LoRA 和梯度隔离统一召回与粗排。',tags:['Decoder-only','Prefix Causal','LoRA','KV Cache'],cardMetrics:[metric('+3.1%','Recall Hit'),metric('+0.75%','CTR-AUC'),metric('−54%','链路时延')],
+          slides:[
+            slide('01 / 背景','级联召回与粗排的信息断层','两套模型独立训练、独立推理：粗排看不到 SID 生成轨迹，用户表征被重复计算，候选 Item 特征也无法与生成语义充分交互。',A+'unir2_arch.png','统一目标','<p>让召回负责“生成什么”，粗排理解“为什么生成”，并共享用户侧计算和 Transformer 主干。</p>',[img('unir2_arch.png','UniR² 统一召回与多目标排序框架',true)]),
+            slide('02 / 训练','统一 Decoder 与 Dual-Query Attention','召回阶段生成 SID；反解 Item 并接入实时特征后，继续在同一 Decoder 输出 CTR、LTR、GTR 等排序目标。',A+'unir2_arch.png','核心贡献','<ol class="number-list"><li><strong>前向共享：</strong>召回与粗排共享 QKV 主干、用户上下文和 SID 表征。</li><li><strong>可见性控制：</strong>Dual-Query Prefix-Causal Attention 区分生成与排序阶段。</li><li><strong>反向隔离：</strong>粗排专属 LoRA + Gradient Detach，避免排序梯度破坏生成能力。</li></ol>',[img('unir2_arch.png','用户上下文、SID 轨迹与 Item 特征统一序列',true)]),
+            slide('03 / 推理','Beam → Item → Rank 的连续链路','Beam Search 生成候选 SID，反解 Item 并拉取实时特征，随后复用 KV Cache 完成排序。',A+'gr_infer_arch.png','在线链路','<p>GPU 保留用户前缀和生成轨迹，CPU/GPU 分层完成候选反解与实时特征拉取，减少重复编码和跨阶段传输。</p>',[img('gr_infer_arch.png','召回粗排一体在线推理链路',true)]),
+            slide('04 / 结果','召回、粗排与时延同时改善','统一建模不是简单多任务共享，指标来自 SID 语义、实时 Item 特征和更充分的 User-Item 交互。',A+'unir2_table.png','量化结果','<p>以召回 Hit、粗排 CTR-AUC 和端到端时延共同验证一体化链路。</p>',[img('unir2_table.png','召粗一体离线与效率结果',true)],[metric('+3.1%','召回 Hit@128'),metric('+0.75%','粗排 CTR-AUC'),metric('−54%','链路时延')]),
+            slide('05 / 产出','统一召回与排序成果','完成直播场景召粗一体业务落地，并形成对应技术论文。',A+'unir2_arch.png','成果','<p>项目贡献覆盖统一序列设计、可见性掩码、LoRA 梯度边界和在线 KV Cache 复用。</p>',[],[],['直播业务上线','内部技术报告与专利'],[{label:'UniR² 论文 ↗',href:'https://arxiv.org/abs/2607.24439'}])
+          ]
+        },
+        {
+          id:'rgd',company:'快手',role:'直播模型组',period:'2025.10 — 2026.01',palette:'gold',title:'价值引导生成：Reward Guided Decoding',cover:A+'rgd_concept.svg',label:'VALUE-GUIDED DECODING',
+          contribution:'把排序价值前移到 Beam Search，在解码阶段联合生成概率与奖励分数，降低“高概率但低价值”的候选。',tags:['Reward Model','Beam Search','Value Alignment'],cardMetrics:[metric('Token-level','价值引导'),metric('Decode-time','策略融合'),metric('无重训练','主生成模型')],
+          slides:[
+            slide('01 / 动机','生成概率不等于业务价值','标准 Beam Search 只最大化 SID 的条件生成概率，容易偏向热门、易生成但点击或观看价值有限的候选。',A+'rgd_concept.svg','核心问题','<p>推荐最终优化的是 CTR、观看时长或多目标价值，而不是纯语言模型似然；两者需要在解码时显式对齐。</p>',[img('rgd_concept.svg','生成概率与业务奖励的联合解码',true)]),
+            slide('02 / 方法','Reward Guided Decoding','在每个解码步骤对候选前缀计算奖励，将 <strong>log P(SID|User)</strong> 与加权 Reward 联合排序后继续扩展 Beam。',A+'rgd_concept.svg','机制设计','<ol class="number-list"><li><strong>前缀奖励：</strong>对未完成 SID 估计未来业务价值。</li><li><strong>联合打分：</strong>生成可信度保证合法性，奖励项负责业务偏好。</li><li><strong>解码即对齐：</strong>无需改变主模型训练，可按业务动态调整奖励权重。</li></ol>',[img('rgd_concept.svg','RGD 的生成器、奖励模型与价值 Beam',true)]),
+            slide('03 / 接入','与 OneLive / UniR² 结合','用户前缀和 SID 轨迹的 KV Cache 可以继续复用；UniR² 粗排头或独立价值模型为候选前缀提供 Reward。',A+'gr_infer_arch.png','工程落点','<p>价值打分应批量执行并控制调用频率，避免奖励模型收益被额外解码时延抵消；同时保留合法 SID Trie 约束。</p>',[img('gr_infer_arch.png','RGD 可接入的生成与排序在线链路',true)]),
+            slide('04 / 价值','从相关性生成走向价值生成','该方向是召粗一体之后的自然延展：生成模型负责覆盖，价值模型负责把有限 Beam 预算分配给更有业务收益的候选。',A+'rgd_concept.svg','评估口径','<ol class="number-list"><li>离线同时观察 Hit、Reward、覆盖率和多样性。</li><li>在线联合 CTR、观看时长、观看次数与延迟守护指标。</li><li>对 Reward 权重做分桶实验，避免过度利用单一短期目标。</li></ol>',[],[metric('相关性 + 价值','联合目标'),metric('Beam 预算','更高利用率')]),
+            slide('05 / 关联产出','公开论文机制与项目延展','本页将 RGD 作为生成式直播推荐的相关演进方向，指标与个人已上线项目严格分开展示。',A+'rgd_concept.svg','说明','<p>核心价值在于把后链路排序偏好前移到候选生成阶段，减少“先生成再淘汰”的级联浪费。</p>',[],[],['价值引导生成方案','与 OneLive / UniR² 链路衔接'],[{label:'RGD 论文 ↗',href:'https://arxiv.org/abs/2607.25344'}],'RGD 为公开论文关联方案，不将论文报告的线上指标表述为个人项目收益。')
+          ]
+        },
+        {
+          id:'llm-recall',company:'字节跳动',role:'TikTok Search',period:'2026.02 — 2026.05',palette:'blue',title:'异形卡 LLM 个性化 Query 召回',cover:A+'llm_recall_pipeline.png',label:'LLM QUERY RECALL',
+          contribution:'融合长期记忆、短期行为与电商图谱构造意图 Prompt，以 SFT + DPO 对齐合法性和下游精排偏好。',tags:['Qwen3-4B','SFT','DPO','Nearline'],cardMetrics:[metric('99.3%','有效 Query'),metric('+1.45pp','PH PV-CTR'),metric('+0.54pp','PV-CTCVR')],
+          slides:[
+            slide('01 / 背景','传统 U2Q 难覆盖长尾意图','热门词、U2Q 和 Q2Q 依赖历史共现，难以刻画用户长尾、组合和实时电商兴趣；直接使用 LLM 又会产生幻觉、泛词和无商品 Query。',A+'llm_recall_pipeline.png','业务目标','<p>生成能命中商品库、通过后链路过滤、符合用户兴趣并具有点击转化价值的个性化搜索词。</p>',[img('llm_recall_pipeline.png','异形卡个性化 Query 召回完整 Pipeline',true)]),
+            slide('02 / 意图','长期记忆 × 近期行为 × 兴趣图谱','统一用户长期电商 Memory、短期 Search/Click/Cart/Order 与类目实体图谱，经过时间对齐、去泄漏和去噪构造 Prompt。',A+'llm_recall_pipeline.png','核心贡献','<ol class="number-list"><li><strong>长期稳定偏好：</strong>品牌、类目、价格带和购买阶段。</li><li><strong>短期实时兴趣：</strong>近期行为按时间衰减并区分行为类型。</li><li><strong>知识约束：</strong>用商品图谱减少不可检索和类目错配。</li></ol>',[img('llm_recall_pipeline.png','用户意图建模与 SFT / DPO 数据链路',true)]),
+            slide('03 / 对齐','SFT 学会生成，DPO 学会业务偏好','真实搜索日志与 Teacher Query 用于 SFT；精排高分/点击 Query 为 Chosen，曝光未点、泛词、幻觉和排序困难负例为 Rejected。',A+'llm_recall_ablation.png','方案对比','<ol class="number-list"><li><strong>Pointwise SFT：</strong>提升基础生成能力和合法率。</li><li><strong>Listwise SFT：</strong>强化 Top-K 覆盖，但合法率下降且成本更高。</li><li><strong>DPO：</strong>离线偏好对齐，不声称 On-policy 探索；困难负例进一步对齐下游排序。</li></ol>',[img('llm_recall_ablation.png','SFT、Listwise SFT 与 DPO 消融结果',true)],[metric('0.813','HitRate@10'),metric('99.3%','有效 Query 率')]),
+            slide('04 / 服务','离线 + 近线混合更新','离线批量生成覆盖长期偏好；近线监听新增行为触发增量 Query，合并去重后写入 User-Query 库。',A+'llm_recall_pipeline.png','链路设计','<p>通过离线吞吐承担主覆盖，近线只处理高价值兴趣变化，在成本、时效性和稳定性之间取得平衡。</p>',[img('llm_recall_pipeline.png','离线批生成与近线增量更新',true)],[metric('40.2%','全量召回占比'),metric('5.2%','独占召回占比')]),
+            slide('05 / 结果','个性化召回完成 PH 灰度','最终方案采用 Pointwise SFT + 困难负例 DPO + Beam Search，在有效率、覆盖和在线转化上取得统一收益。',A+'llm_recall_ablation.png','量化收益','<p>指标均在 TikTok Search PH 地区异形卡业务口径下统计。</p>',[],[metric('99.3%','有效 Query 率'),metric('40.2%','全量召回占比'),metric('5.2%','独占召回占比'),metric('+1.45pp','PV-CTR'),metric('+0.54pp','PV-CTCVR')],['TikTok Search PH 灰度上线','完整离线 / 近线链路','内部技术报告与专利'])
+          ]
+        },
+        {
+          id:'mixtrans',company:'字节跳动',role:'TikTok Search',period:'2026.02 — 2026.05',palette:'violet',title:'OneTrans 改造：MixTrans',cover:A+'mixtrans_arch.png',label:'UNIFIED SEQUENCE',
+          contribution:'统一长短期多行为序列，以 64→64→32→16 金字塔裁剪和高效 Cross-Attention 降低 FLOPs。',tags:['OneTrans','Pyramid','Cross Attention'],cardMetrics:[metric('+0.19%','综合 AUC'),metric('+0.27%','异形卡 AUC'),metric('+28%','训练吞吐')],
+          slides:[
+            slide('01 / 背景','统一序列模型的效率瓶颈','浏览、搜索、加购和下单序列来源不同、长度差异大；原模型存在冗余预处理和全量交互，扩展序列后 FLOPs 与延迟快速增长。',A+'mixtrans_arch.png','改造目标','<p>保留 OneTrans 的统一序列建模能力，同时根据搜索场景的信息密度重新设计 Token 流和层级宽度。</p>',[img('mixtrans_arch.png','MixTrans 总体模型结构',true)]),
+            slide('02 / Token','统一多行为序列表示','长短行为与搜索/内容序列统一 Token 化，使用 Type / Pos Embedding 区分来源和时间位置，并移除 SlotNet 冗余预处理。',A+'mixtrans_arch.png','核心贡献','<ol class="number-list"><li><strong>Type Embedding：</strong>区分 Search、Click、Cart、Order 等行为语义。</li><li><strong>Position Encoding：</strong>恢复行为顺序和时效性。</li><li><strong>统一主干：</strong>减少多序列独立塔造成的参数与特征重复。</li></ol>',[img('mixtrans_arch.png','多行为 Token 化与统一 Transformer',true)]),
+            slide('03 / 金字塔','64 → 64 → 32 → 16 Token 裁剪','按层筛选高价值 Token，在深层只保留与目标最相关的行为；高效 Cross-Attention 完成多序列交互。',A+'mixtrans_arch.png','效率设计','<ol class="number-list"><li>浅层保留完整上下文，避免过早损失召回信息。</li><li>中深层逐步压缩 Token，降低注意力平方复杂度。</li><li>目标侧 Cross-Attention 聚焦候选相关行为。</li></ol>',[img('mixtrans_arch.png','金字塔 Token 流与 Cross-Attention',true)],[metric('293M → 231M','参数量'),metric('9.5T → 7.3T','FLOPs')]),
+            slide('04 / 结果','效果提升且资源开销下降','统一序列和金字塔裁剪同时改善异形卡子集效果、训练吞吐和在线延迟。',A+'mixtrans_arch.png','量化结果','<p>消融实验分别验证 Token 统一、金字塔裁剪和 Cross-Attention 的独立贡献。</p>',[],[metric('+0.19%','综合 AUC'),metric('+0.27%','异形卡 AUC'),metric('+28%','训练吞吐'),metric('−10%~11.6%','线上延迟'),metric('−21.2%','参数量'),metric('−23.2%','FLOPs')]),
+            slide('05 / 产出','搜索精排模型完成改造','MixTrans 以更低成本承接多序列统一建模，为后续模型 Scaling 释放资源空间。',A+'mixtrans_arch.png','成果','<p>项目覆盖序列 Token 设计、主干改造、计算分析和线上性能评估。</p>',[],[],['TikTok Search 精排灰度','内部技术报告与专利'])
+          ]
+        },
+        {
+          id:'autoattrib',company:'阿里妈妈',role:'营销托管 · 搜索广告',period:'2026.06 — 至今',palette:'teal',title:'AutoAttribRec 归因驱动 AutoResearch',cover:A+'autoattribrec_arch.png',label:'AGENT4REC',
+          contribution:'以提案—代码—实验三级归因和可信长短期记忆，区分随机涨点与机制真实成立。',tags:['Multi-Agent','Attribution','STM / LTM'],cardMetrics:[metric('+4.6pt','AIGB ACC30'),metric('−5.7pp','Uplift MAPE'),metric('AAAI','投稿')],
+          slides:[
+            slide('01 / 问题','稳定涨点不等于机制归因','多随机种子只能判断收益是否稳定，不能解释收益为什么产生；耦合代码改动和噪声涨点一旦进入长期记忆，会持续误导后续搜索。',A+'autoattribrec_compare.png','研究问题','<p>AutoResearch 的核心不应只是“多试方案”，而是判断一次实验究竟验证了什么，并用证据修正后续研究路径。</p>',[img('autoattribrec_compare.png','Score-only 错误循环与归因自修正',true)]),
+            slide('02 / 框架','提案—代码—实验三级归因','实验前定义机制假设、代码干预、行为探针和预期效应；实验后联合代码差异、行为变化与性能变化形成实验认知。',A+'autoattribrec_arch.png','核心贡献','<ol class="number-list"><li><strong>提案级：</strong>假设是否可证伪，预期效应是否清晰。</li><li><strong>代码级：</strong>实际修改是否等价于计划干预，是否混入耦合改动。</li><li><strong>实验级：</strong>行为探针是否变化，指标提升是否与机制一致。</li></ol>',[img('autoattribrec_arch.png','AutoAttribRec 多 Agent 与三级归因框架',true)]),
+            slide('03 / 记忆','可信 STM / LTM 闭环','短期记忆保留实验轨迹，长期记忆只沉淀带证据、适用边界和失败条件的结论。',A+'autoattribrec_arch.png','自修正机制','<ol class="number-list"><li>预期与实际偏差驱动问题重构和知识检索。</li><li>多随机种子、权重扰动、配对实验和分层指标排除不可信实验。</li><li>通过测试脚本与行为探针保存可复用证据，而非只存最终分数。</li></ol>',[img('autoattribrec_compare.png','错误记忆放大与归因记忆对比'),img('autoattribrec_arch.png','STM / LTM 可信认知闭环')]),
+            slide('04 / 结果','跨 AIGB 与 Uplift 环境验证','框架自动提出、实现和验证研究方向，并将通过归因测试的结论反馈给后续搜索。',A+'autoattribrec_arch.png','量化结果','<p>以预测准确率和分层误差共同评价，避免单一汇总分数掩盖机制失效。</p>',[],[metric('+4.6pt','AIGB ACC30'),metric('49.83% → 44.13%','Uplift MAPE'),metric('2 类','验证任务')]),
+            slide('05 / 产出','归因式自动研究成果','形成论文、实验框架和业务环境自动迭代实践。',A+'autoattribrec_arch.png','成果','<p>论文聚焦可验证实验认知、错误记忆抑制与跨轮搜索复用。</p>',[],[],['AutoAttribRec · AAAI 投稿','AIGB / Joint Uplift 自动迭代','内部技术报告'],[{label:'论文 PDF ↗',href:A+'AutoAttribRec.pdf'}])
+          ]
+        },
+        {
+          id:'uplift',company:'阿里妈妈',role:'营销托管 · 搜索广告',period:'2026.06 — 至今',palette:'coral',title:'Joint Uplift 多渠道联合建模',cover:A+'joint_uplift_arch.png',label:'CAUSAL REALLOCATION',
+          contribution:'用 ReAlloc 快慢因果 Teacher-Student 学习局部边际收益，刻画渠道替代、挤出与协同效应。',tags:['Causal Uplift','Teacher-Student','ReAlloc'],cardMetrics:[metric('+3.5%','PayOrder'),metric('+3.2pt','平台收入'),metric('30 万','商品')],
+          slides:[
+            slide('01 / 背景','多渠道预算不是独立决策','广告、权益和优惠券之间存在替代、挤出与协同；逐渠道 Uplift 无法建模交互，全局 Predict-then-Optimize 又容易在训练支持域外激进外推。',A+'joint_uplift_table.png','业务目标','<p>在总预算固定的条件下，只在历史数据可支持的邻域内重新分配各渠道投入，使商品整体收益最大。</p>',[img('joint_uplift_table.png','多渠道替代关系与全局优化风险',true)]),
+            slide('02 / Teacher','Orthogonal Teacher 学习局部响应','将 GMV 拆为基础响应和 Treatment 残差，利用自然分配附近的偏移学习多渠道联合响应，并通过正交化降低混杂。',A+'joint_uplift_arch.png','核心贡献','<ol class="number-list"><li><strong>联合输入：</strong>一次建模所有渠道 Treatment 及交互。</li><li><strong>局部学习：</strong>围绕真实分配估计可识别的边际响应。</li><li><strong>路径依赖：</strong>Multi-SeqTCN 与 Sale/Treatment 分路 FiLM 表达时序作用。</li></ol>',[img('joint_uplift_arch.png','ReAlloc Teacher-Student 完整框架',true)]),
+            slide('03 / Student','蒸馏稳定可积的边际收益场','在真实分配附近生成局部重分配动作，用 Teacher 的 GMV 差值除以步长构造边际收益标签，Student 聚合多天 Replay 学习更平滑的决策信号。',A+'joint_uplift_arch.png','核心贡献','<ol class="number-list"><li><strong>Replay Buffer：</strong>跨天聚合局部梯度，降低单日噪声。</li><li><strong>Jacobian Matching：</strong>让 Student 学习稳定边际场，而非复制结果预测。</li><li><strong>可积约束：</strong>保证多步重分配方向一致。</li></ol>',[img('joint_uplift_arch.png','Orthogonal Teacher 与 Potential Student',true)]),
+            slide('04 / 策略','支持度与不确定性约束','从当前预算出发枚举可行动作，仅当预测边际收益超过阈值且处于支持域内时更新，直到没有可靠正收益动作。',A+'joint_uplift_table.png','安全决策','<p>将绝对 Uplift 转化为预算单纯形上的局部重分配，避免全局外推误差被优化器放大。</p>',[img('joint_uplift_table.png','支持域内保守重分配',true)],[metric('局部动作','策略空间'),metric('支持度 + 不确定性','双重约束')]),
+            slide('05 / 结果','30 万商品线上实验','在 14 天线上 A/B 中验证联合建模与保守策略的真实增益。',A+'joint_uplift_arch.png','量化收益','<p>收益来自跨渠道联合分配，而不是简单提高某一个渠道的平均 Uplift。</p>',[],[metric('14 天','线上 A/B'),metric('30 万','商品规模'),metric('+3.5%','PayOrder'),metric('+3.2pt','平台收入')],['营销托管业务灰度上线','Multi-channel Uplift 技术方案','内部技术报告'],[{label:'方案 PDF ↗',href:A+'Multi_channel_Uplift.pdf'}])
+          ]
+        }
+      ];
+
+      const legacyPapers = [
+        {id:'paper-uno',palette:'violet',label:'AAAI ORAL · 共同一作',title:'UNO! UNified Offline Training Paradigm for Learning Path Recommendation',cover:A+'uno_arch.png',contribution:'统一长期知识状态、题目结构和 KT 学生环境，以稠密过程奖励驱动 GRPO 策略优化。',tags:['Generative Rec','GRPO','Learning Path'],slides:[
+          slide('01 / 背景','从匿名 Session 到长期学习状态','传统学习路径推荐忽略学生长期知识状态，结果奖励稀疏且无法判断单道题的真实教学价值。',A+'uno_arch.png','研究问题','<p>如何在不进行真实学生在线探索的前提下，构建可交互、可评价的离线训练环境。</p>',[img('uno_arch.png','UNO 统一离线训练框架',true)]),
+          slide('02 / 方法','KT 环境 + GRPO 策略优化','统一题目/表现序列，KT 学生模型生成稠密过程奖励，再用 GRPO 优化生成式学习路径策略。',A+'uno_arch.png','核心贡献','<ol class="number-list"><li>联合建模长期知识水平 KL 与题目结构 KS。</li><li>用 KT 构造学生模拟环境，把稀疏结果反馈转换为过程奖励。</li><li>在离线环境中用 GRPO 优化策略，降低真实探索风险。</li></ol>',[img('uno_arch.png','长期知识状态、KT 环境与 GRPO',true)]),
+          slide('03 / 结果','统一范式的实验验证','在多种学习路径推荐基线之上验证长期状态、过程奖励和策略优化的贡献。',A+'uno_exp_table.png','结果','<p>通过主结果、消融和不同知识状态分组验证方法稳定性。</p>',[img('uno_exp_table.png','UNO 主实验与消融结果',true)],[metric('AAAI Oral','录用形式'),metric('共同一作','个人角色')]),
+          slide('04 / 论文','论文与作者贡献','完成问题定义、方法设计、实验和论文写作。',A+'uno_arch.png','产出','<p>工作将生成式推荐和教育知识追踪统一到一个可离线优化的决策框架。</p>',[],[],['AAAI Oral','共同一作'],[{label:'论文主页 ↗',href:'https://ojs.aaai.org/index.php/AAAI/article/view/38591'}])
+        ]},
+        {id:'paper-mtfm',palette:'blue',label:'TECH REPORT · 共同作者',title:'MTFM: A Scalable and Alignment-free Foundation Model for Industrial Recommendation in Meituan',cover:A+'mtfm_arch.png',contribution:'以 Alignment-free 异构 Token、用户粒度样本和高效注意力构建多业务统一推荐基础模型。',tags:['Ranking FM','Scaling','HTA'],slides:[
+          slide('01 / 论文','工业推荐基础模型','多场景推荐长期依赖严格输入对齐和重复模型，MTFM 统一多业务知识并验证数据、参数规模扩展规律。',A+'mtfm_arch.png','核心贡献','<ol class="number-list"><li>Alignment-free 异构 Token 化，避免强制对齐的信息损失。</li><li>User-level 样本减少实例数量与重复用户计算。</li><li>HTA、GQA、Kernel Fusion 与系统优化共同支撑工业 Scaling。</li></ol>',[img('mtfm_arch.png','MTFM 完整模型架构',true)]),
+          slide('02 / 效率','从注意力到系统的协同优化','模型结构、KV Cache、Kernel 和数据 Pipeline 同时优化，使更大模型满足在线约束。',A+'hta_scta.png','方法','<p>HTA 聚焦目标交互，SCTA 重排计算，UG-Sep 复用用户表示。</p>',[img('hta_scta.png','HTA / SCTA 高效建模'),img('mtfm_scaling_exp.png','MTFM Scaling 实验')],[metric('100TB','训练数据'),metric('0.2B → 0.8B','模型扩展'),metric('+100%','训练吞吐')]),
+          slide('03 / 论文','MTFM v1','公开版本已加入论文卡片与美团项目产出。',A+'mtfm_arch.png','产出','<p>Technical Report 总结多业务统一推荐基础模型的架构、效率和线上结果。</p>',[],[],['Technical Report','共同作者'],[{label:'arXiv v1 ↗',href:'https://arxiv.org/abs/2602.11235v1'}])
+        ]},
+        {id:'paper-diffusion',palette:'cyan',label:'SHM Q1 · 第一作者',title:'A Conditional Diffusion-Based Method for Missing Data Imputation in Tunnel Monitoring',cover:A+'diffusion_arch.svg',contribution:'用非自回归条件扩散与门控时序—特征注意力，提升真实隧道高缺失率监测数据填补鲁棒性。',tags:['Diffusion','Imputation','Time Series'],slides:[
+          slide('01 / 背景','真实 SHM 的高缺失率问题','传感器故障和环境扰动造成大量缺失；统计方法难建模非线性时空依赖，自回归模型又会累积误差。',A+'diffusion_arch.svg','研究问题','<p>在 50%—70% 高缺失率下，如何利用观测序列和环境条件稳定恢复多源隧道应变数据。</p>',[img('diffusion_arch.svg','条件扩散缺失数据填补框架',true)]),
+          slide('02 / 方法','非自回归条件扩散填补','以观测掩码、温度和水位作为条件，门控融合 Temporal / Feature Self-Attention，在扩散去噪中恢复缺失值。',A+'diffusion_arch.svg','核心贡献','<ol class="number-list"><li>非自回归扩散减少逐步预测误差累积。</li><li>门控时序—特征注意力联合捕获时间和跨传感器依赖。</li><li>环境变量条件提高跨工况鲁棒性。</li></ol>',[img('diffusion_arch.svg','扩散过程与门控时序—特征注意力',true)]),
+          slide('03 / 结果','高缺失率下保持稳定','在两套真实隧道结构健康监测数据上验证。',A+'diffusion_arch.svg','结果','<p>以概率预测 CRPS 为主要指标，比较不同缺失率下的恢复质量。</p>',[],[metric('+46.73%','50% 缺失率 CRPS 改善'),metric('+32.46%','70% 缺失率 CRPS 改善'),metric('2 套','真实隧道数据')]),
+          slide('04 / 论文','期刊成果','论文发表于 Structural Control and Health Monitoring。',A+'diffusion_arch.svg','产出','<p>第一作者，负责完整方法、实验和论文工作。</p>',[],[],['SHM Q1','第一作者'],[{label:'期刊论文 ↗',href:'https://onlinelibrary.wiley.com/doi/10.1155/stc/6629515'}])
+        ]},
+        {id:'paper-autoattrib',palette:'teal',label:'AAAI 2027 在投 · 第一作者',title:'AutoAttribRec: Attribution-Guided Self-Evolving Research for Recommender Systems',cover:A+'autoattribrec_arch.png',contribution:'将自动实验升级为可归因研究：机制假设、代码干预、行为探针和可信记忆共同形成证据闭环。',tags:['Agent4Rec','AutoResearch','Attribution'],slides:[
+          slide('01 / 问题','为什么分数驱动不够','偶然涨点和耦合改动会被 Agent 误判为有效方向，并通过长期记忆持续放大。',A+'autoattribrec_compare.png','核心问题','<p>结果是否稳定与机制是否成立是两件事；只有归因证据才能支持后续搜索复用。</p>',[img('autoattribrec_compare.png','Score-only 与 Attribution-driven Research 对比',true)]),
+          slide('02 / 框架','归因驱动自进化研究','显式构造任务条件、机制假设、代码干预、行为探针和预期效应，完成提案—代码—实验三级验证。',A+'autoattribrec_arch.png','核心贡献','<ol class="number-list"><li>对代码差异、行为变化和性能变化进行联合归因。</li><li>通过预期/实际偏差驱动问题重构和检索。</li><li>长期记忆只存带证据和适用边界的实验认知。</li></ol>',[img('autoattribrec_arch.png','AutoAttribRec 整体框架',true)]),
+          slide('03 / 结果','跨推荐任务验证','在 AIGB 与 Joint Uplift 环境完成自动研究迭代。',A+'autoattribrec_arch.png','结果','<p>指标提升同时通过行为探针和多种可信性实验验证。</p>',[],[metric('+4.6pt','AIGB ACC30'),metric('−5.7pp','Uplift MAPE')]),
+          slide('04 / 论文','AAAI 投稿','第一作者，负责方法、系统实现、实验与论文写作。',A+'autoattribrec_arch.png','产出','<p>研究重点是自动实验的机制归因和可信知识沉淀。</p>',[],[],['AAAI 2027 在投','第一作者'],[{label:'论文 PDF ↗',href:A+'AutoAttribRec.pdf'}])
+        ]}
+      ];
+
+      */
+      const projects = [
+        {
+          id:'mtfm-new',company:'美团',palette:'blue',title:'MTFM 多业务统一精排',cover:I+'meituan/proj1_mtfm/封面图.png',label:'UNIFIED RANKING',
+          contribution:'从样本、Token 到注意力掩码统一多场景精排，在一套 HSTU 主干中实现跨业务知识共享与端到端建模。',tags:['User-level Sample','HSTU','Dynamic Mask'],cardMetrics:[metric('+1.89%','SQS CTR'),metric('+2.98%','SQS Orders'),metric('−6ms','PHF Latency')],
+          slides:[
+            slide('01 / 统一样本','从 Request 样本到天级用户样本','把同一用户一天内的画像、历史/实时行为与多场景目标聚合到一个 User-level 样本，先解决重复存储与重复计算。',I+'meituan/proj1_mtfm/1.样本天粒度聚合.png','图中方案','<ol class="number-list"><li><strong>共享用户侧：</strong>统一 User Profile、历史序列 HSeqs 与实时序列 RSeqs，同一用户当天只编码一次。</li><li><strong>保留场景差异：</strong>各业务的 User、Context 与 Item 特征仍以异构目标 Token 接入，不用强行对齐稠密槽位。</li><li><strong>天级 UG 分离：</strong>将用户公共信息与候选目标解耦，为训练批处理、在线复用和后续 Scaling 建立统一数据底座。</li></ol>'),
+            slide('02 / 模型主干','一套 HSTU 承载多业务目标','行为序列、业务用户信息和曝光目标统一嵌入为 Token，经共享的 15 层 HSTU 建模，再由业务级 MMoE 与多任务塔输出。',I+'meituan/proj1_mtfm/2.MTFM架构图.png','架构对应','<ol class="number-list"><li><strong>统一 Token 化：</strong>行为、用户与目标特征进入同一序列空间，减少传统 DLRM 多塔之间的信息割裂。</li><li><strong>共享主干：</strong>跨业务共用 HSTU 表征能力，使高频场景知识能够迁移到低频场景。</li><li><strong>任务解耦：</strong>业务侧 MMoE 与多任务 Loss 保留差异化目标，缓解多目标跷跷板。</li></ol>'),
+            slide('03 / 动态掩码','按业务与时间控制信息可见性','动态混合掩码让共享序列充分交互，同时阻断目标与未来行为之间的信息泄漏。',I+'meituan/proj1_mtfm/3.多业务动态混合掩码.png','掩码设计','<ol class="number-list"><li><strong>V1：</strong>各场景 Target Token 使用时间戳掩码；业务独有行为保持隔离，多业务公共行为共享。</li><li><strong>V2：</strong>进一步将多业务序列按时间戳合并，并统一商家—商品序列，强化跨场景迁移。</li><li><strong>安全交互：</strong>针对 H / R / T 三类 Token 定义可见区域，兼顾因果性、共享范围与训练稳定性。</li></ol>'),
+            slide('04 / 业务收益','Scaling 与多场景线上收益','新图同时验证模型规模、训练数据与推理 GFLOPs 的 Scaling 规律，并给出 SQS、HP、PHF 多业务线上结果。',I+'meituan/proj1_mtfm/4.多场景业务收益.png','结果解读','<p>SQS 场景 CTR、UV_CTCVR 与订单均提升，同时降低 5ms 延迟；PHF 场景同样取得稳定增益并降低 6ms 延迟，说明统一主干没有以牺牲单场景效果换取共享。</p>',[],[metric('+1.89%','SQS CTR'),metric('+2.46%','SQS UV_CTCVR'),metric('+2.98%','SQS Orders'),metric('−5ms','SQS Latency'),metric('+1.53%','PHF CTR'),metric('+1.45%','PHF Orders'),metric('−6ms','PHF Latency')],['多场景业务上线','MTFM Technical Report'])
+          ]
+        },
+        {
+          id:'scaling-new',company:'美团',palette:'teal',title:'高效 Scaling：HTA / SCTA / UG-Sep',cover:I+'meituan/proj2_scaling/封面图png.png',label:'EFFICIENT SCALING',
+          contribution:'围绕注意力、目标 Token 容量与共享用户计算三层优化，把模型从 0.2B 扩至 0.8B，同时守住吞吐和延迟。',tags:['HTA','SCTA','Token Split-Up','UG-Sep'],cardMetrics:[metric('+100%','训练吞吐'),metric('−30%','推理 TP99'),metric('0.2B→0.8B','模型规模')],
+          slides:[
+            slide('01 / 注意力','HTA + SCTA 重分配计算预算','混合 Full Attention 与带 GQA 的 Target Attention，让全局信息传播和候选侧精细交互各用合适算力；SCTA 再重排 Target Attention 计算。',I+'meituan/proj2_scaling/1.HTA&SCTA.png','结构与效率','<ol class="number-list"><li><strong>HTA：</strong>以 FA:TA = 1:3 的混合层级减少全量注意力开销。</li><li><strong>SCTA：</strong>重排目标注意力路径并引入 SwiGLU-FFN，补足非线性表达。</li><li><strong>Semi-local + GQA：</strong>限制低价值交互范围、压缩 KV 开销，使结构优化真实反映到吞吐与 TP99。</li></ol>',[],[metric('+100%','离线训练吞吐'),metric('AUC 持平','效果约束'),metric('−30%','推理 TP99')]),
+            slide('02 / 参数扩展','Target Token 1 拆 4','把单个目标 Token 拆为 4 个语义子 Token，并配置独立 Q 投影、Target Attention 与 per-token FFN，在不重复用户主干的前提下增加候选侧容量。',I+'meituan/proj2_scaling/2.token split up.png','Scaling Up 设计','<ol class="number-list"><li><strong>容量增量集中在目标侧：</strong>细分候选语义，不把参数浪费在重复用户表示上。</li><li><strong>交互解耦：</strong>用户序列与目标序列分别表示，再通过 Target Token Mixing 完成融合。</li><li><strong>可部署扩展：</strong>模型由 0.2B 扩到 0.8B，训练速度保持在同一量级。</li></ol>',[],[metric('1 → 4','Target Token'),metric('0.2B → 0.8B','参数规模'),metric('基本持平','训练速度')]),
+            slide('03 / 计算复用','UG-Sep 共享用户 Token','候选共享用户 Profile、长短期序列和注意力结果，仅保留候选相关的 U-I RankMixer 与目标侧 FFN，避免多候选重复计算。',I+'meituan/proj2_scaling/3.UG Sep复用.png','复用路径','<ol class="number-list"><li><strong>Share Token：</strong>用户侧 Token 与 KV 只计算一次，随后广播给多个候选。</li><li><strong>目标侧补偿：</strong>加入 G 侧信息补偿，避免完全拆分造成上下文缺失。</li><li><strong>收益约束：</strong>推理速度保持不变的同时，离线各指标提升约 0.15pp。</li></ol>',[],[metric('+0.15pp','离线指标'),metric('保持不变','推理速度'),metric('多候选共享','用户计算')],['高效 Scaling 方案落地','内部技术报告与专利'])
+          ]
+        },
+        {
+          id:'onelive-new',company:'快手',palette:'coral',title:'OneLive 动态 SID 与生成式推荐',cover:I+'kuaishou/onelive/封面图.png',label:'DYNAMIC GENERATIVE REC',
+          contribution:'把动态 Tokenizer、Time-aware MTP 与全局语义蒸馏串成直播生成式推荐闭环。',tags:['Dynamic SID','RQ-VAE','MTP','Distillation'],cardMetrics:[metric('+88.12%','单机 QPS'),metric('+0.961%','LTV1 观看时长'),metric('80.9%','OneLive 曝光')],
+          slides:[
+            slide('01 / 总览','OneLive 的三段式生成框架','动态 IA Tokenizer 生成随直播内容变化的 SID；Time-aware MTP Decoder 接收用户直播/视频序列；DPO / GRPO 再用排序模型反馈优化策略。',I+'kuaishou/onelive/1.onelive框架图.png','端到端链路','<ol class="number-list"><li><strong>表征：</strong>融合主播、多模态直播切片与用户协同信息，形成可更新的 Dynamic SID。</li><li><strong>生成：</strong>上下文投影后进入带时间特征的 Decoder，顺序生成层级 SID。</li><li><strong>对齐：</strong>Beam 候选经过 Rank Model 评价，将偏好反馈用于 DPO / GRPO 更新。</li></ol>'),
+            slide('02 / Tokenizer','可流式更新的动态码本','门控融合多模态与协同 Embedding，端到端训练 RQ-VAE；以 Res-Kmeans 初始化和定期更新码本，并用多种约束防坍塌、防漂移。',I+'kuaishou/onelive/2.动态tokenizer.png','码本设计','<ol class="number-list"><li><strong>三类正则：</strong>多样性、语义一致性与协同一致性共同约束量化表示。</li><li><strong>稳定更新：</strong>全量主播 Res-Kmeans 初始化，配合死码剔除与频控，降低 GR Label 抖动。</li><li><strong>多维评价：</strong>链路序一致性、精排增益、码本漂移率、类内一致性与分布熵共同验收。</li></ol>'),
+            slide('03 / MTP','Sequential MTP 加速 SID 解码','在主 Decoder 后接轻量预测头，逐步复用已生成前缀、浅层参数与 KV 信息，减少完整 Decoder 调用。',I+'kuaishou/onelive/3.MTP.png','训练与推理','<ol class="number-list"><li><strong>训练：</strong>GRM、MTP1、MTP2 多目标联合学习，并支持部分或完全共享参数。</li><li><strong>推理：</strong>轻量 Decoder 依赖前序 SID 草拟后续 Token，保留层级语义。</li><li><strong>吞吐：</strong>单机 QPS 从 0.925k 提升到 1.74k。</li></ol>',[],[metric('0.925k → 1.74k','单机 QPS'),metric('+88.12%','吞吐提升'),metric('Sequential','前缀条件化')]),
+            slide('04 / 语义增强','混合码本、动态调权与全局蒸馏','ResKmeansLFQ 扩充尾层容量；SID 动态自适应感知权重平衡层级目标；IA 全局语义通过蒸馏 Loss 直接约束生成序列。',I+'kuaishou/onelive/4.语义蒸馏.png','线上结果','<p>离线收益显著并在极速场景上线；精选效果保持稳定，OneLive 曝光占比由 65.2% 提升至 80.9%。</p>',[],[metric('+0.853%','单列外流直播间内观看时长'),metric('+0.961%','LTV1 直播观看时长'),metric('65.2% → 80.9%','OneLive 曝光占比')],['OneLive 业务上线','论文与内部专利'])
+          ]
+        },
+        {
+          id:'unified-pipeline-new',company:'快手',palette:'violet',title:'直播召粗一体与可控生成',cover:I+'kuaishou/链路一体化/封面图.png',label:'RECALL × RANK',
+          contribution:'用统一 Decoder 串联生成式召回与多目标粗排，再以 Reward Guided Decoding 注入商业价值。',tags:['Unified Decoder','KV Reuse','Ranking LoRA','RGD'],cardMetrics:[metric('−54.29%','链路耗时'),metric('+1.45%','CTR UAUC'),metric('+1.13%','LVTR AUC')],
+          slides:[
+            slide('01 / 统一模型','一条 Token 序列完成召回与粗排','用户上下文、SID 生成段与商品排序特征拼接为统一序列；生成 Segment 输出候选，排序 Segment 在共享主干上预测 CTR / LVTR / GTR。',I+'kuaishou/链路一体化/1.召排一体模型图.png','结构对应','<ol class="number-list"><li><strong>表征复用：</strong>粗排直接复用召回生成的用户表示，消除两阶段信息割裂。</li><li><strong>掩码隔离：</strong>召回采用前缀因果掩码，粗排只读关键片段，兼顾生成合法性与效率。</li><li><strong>梯度解耦：</strong>主干参数共享，粗排使用专属 LoRA 并截断反向干扰，实现前向互通、优化解耦。</li></ol>'),
+            slide('02 / 在线收益','模型收益与链路收益同时成立','GPU 侧缓存用户前缀与 SID 轨迹 KV，生成候选直接进入多目标排序；CPU 仅保留特征提取与策略过滤，缩短串行链路。',I+'kuaishou/链路一体化/2.线上infer和收益.png','结果解读','<p>召回收益来自 Decoder 架构与 Embedding 共建，粗排收益来自 Transformer 化和 SID 感知；统一链路进一步带来 54.29% 的推理时耗下降。</p>',[],[metric('+4.54%','Show HR@64'),metric('+4.75%','Click HR@64'),metric('+0.75%','CTR AUC'),metric('+1.45%','CTR UAUC'),metric('+1.13%','LVTR AUC'),metric('−54.29%','Inference Time')]),
+            slide('03 / 价值引导','Reward Guided Decoding','将推荐价值引导写成 KL 正则下的奖励最大化问题：在生成概率上叠加奖励分数，以小范围候选重排控制计算成本。',I+'kuaishou/链路一体化/3.可控引导生成.png','解码机制','<ol class="number-list"><li><strong>共享表示：</strong>Reward Model 读取冻结生成器的 Embedding、Attention 与 FFN 表示，联合预测 CTR、LVTR、WTR。</li><li><strong>受控打分：</strong>只对 Top-M 分支计算奖励，再按 logP + R/β 选择 Top-K，避免对整棵树全量打分。</li><li><strong>两种模式：</strong>Pre-merge 更早介入路径剪枝，Post-merge 则以更低成本完成候选重排。</li></ol>',[],[],['召粗一体链路上线','Reward Guided Decoding 方案'])
+          ]
+        },
+        {
+          id:'llm-recall-new',company:'字节跳动',palette:'blue',title:'TikTok Search 异形卡个性化召回',cover:I+'zijie/异形卡召回/封面图.png',label:'LLM PERSONALIZED RECALL',
+          contribution:'从长期兴趣、短期行为与类目意图构建用户画像，经 SFT + DPO 生成个性化 Query，并以离线/近线混合更新服务召回。',tags:['SFT','DPO','User Intent','Nearline'],cardMetrics:[metric('+1.45pp','PV-CTR'),metric('+0.54pp','PV-CTCVR'),metric('99.3%','有效 Query')],
+          slides:[
+            slide('01 / 完整链路','训练平面与服务平面一体设计','训练侧先构造 Personalized User Intent，再用强模型生成高质量 Query 监督信号，最后通过偏好对齐提升相关性、搜索性与多样性。',I+'zijie/异形卡召回/1.总体框架.png','图中流程','<ol class="number-list"><li><strong>兴趣构建：</strong>融合长期 Memory、短期行为序列和电商兴趣图谱，完成特征清洗、时间对齐与统一意图表达。</li><li><strong>SFT + DPO：</strong>小模型学习生成候选；按相关性、搜索性、泛词与重复过滤构造 Chosen / Rejected，并持续吸收线上反馈。</li><li><strong>离线 + 近线：</strong>离线全量刷新保证覆盖，近线监听关键行为触发增量生成；统一写入 User–Query ABase 后召回异形卡候选。</li></ol>'),
+            slide('02 / 实验与上线','困难负例 DPO 形成最终方案','单点 SFT 先提升基础生成与合法率；Listwise SFT 扩大 Top-K 覆盖但成本更高；困难负例 DPO 在覆盖、有效率与业务偏好间取得最优平衡。',I+'zijie/异形卡召回/2.实验收益.png','最终结果','<p>最终方案为单点 SFT + 困难负例 DPO + Beam Search，在 PH 地区异形卡业务完成上线验证。</p>',[],[metric('0.813','HitRate@10'),metric('40.2%','全量召回占比'),metric('5.2%','独占召回占比'),metric('99.3%','有效 Query 率'),metric('+1.45pp','PV-CTR'),metric('+0.54pp','PV-CTCVR')],['TikTok Search PH 上线','离线 / 近线 User–Query 服务'])
+          ]
+        },
+        {
+          id:'mixtrans-new',company:'字节跳动',palette:'violet',title:'OneTrans 改造：MixTrans',cover:I+'zijie/OneTrans改造/封面图.png',label:'UNIFIED SEQUENCE',
+          contribution:'统一长短行为序列，以 Type / Position Embedding、Pseudo Cross Attention 与 64→64→32→16 金字塔压缩降低成本。',tags:['OneTrans','Pyramid','Cross Attention'],cardMetrics:[metric('+0.19%','综合 AUC'),metric('+0.27%','异形卡 AUC'),metric('+28%','训练吞吐')],
+          slides:[
+            slide('01 / 架构与收益','MixTrans 金字塔序列主干','将 View、Cart、Order 等短/长行为统一 Merge，补充 Type / Position Embedding；浅层保留完整 64 Token，上层逐步压缩为 64→32→16。',I+'zijie/OneTrans改造/1.mixtrans.png','核心改造','<ol class="number-list"><li><strong>统一行为语义：</strong>多来源行为合并成同一 Product Token 序列，以类型和位置编码区分来源与时序。</li><li><strong>高效交互：</strong>Pseudo Cross Attention 让候选 Query 聚焦关键行为，Per-token FFN 提升局部表达。</li><li><strong>金字塔压缩：</strong>越深层越聚焦高价值 Token，降低注意力与 FFN 的重复开销。</li></ol>',[],[metric('+0.19%','综合 AUC'),metric('+0.27%','异形卡 AUC'),metric('+28%','训练吞吐')],['TikTok Search 精排改造'])
+          ]
+        },
+        {
+          id:'autoattrib-new',company:'阿里妈妈',palette:'teal',title:'AutoAttribRec 归因驱动 AutoResearch',cover:I+'alimama/归因引导的autoresearch/封面图.png',label:'AGENT4REC',
+          contribution:'把机制假设、代码干预、行为探针与结果变化放进同一归因闭环，阻断随机涨点和错误记忆。',tags:['Attribution','STM / LTM','AutoResearch'],cardMetrics:[metric('+4.72%','平均提升'),metric('+10.40%','跨实验迁移'),metric('10%','失败率')],
+          slides:[
+            slide('01 / 问题','分数驱动会放大错误认知','仅看指标涨点时，随机噪声或耦合代码改动容易被误判为机制有效；错误结论进入长期记忆后，会反复引导后续搜索走入同一错误循环。',I+'alimama/归因引导的autoresearch/1现有研究不足.png','对比关系','<ol class="number-list"><li><strong>Score only：</strong>多头方案偶然涨点后被记录为“容量有效”，复现实验失败却无法定位原因。</li><li><strong>Attribution：</strong>在实验前声明机制与预期行为，结果不符合行为探针时拒绝错误归因。</li><li><strong>自修正：</strong>保留“顺序不敏感”等可验证证据，再转向位置编码等更匹配的问题假设。</li></ol>'),
+            slide('02 / 框架','提案—代码—实验三级归因','AutoAttribRec 从上下文与历史认知生成可证伪机制，隔离代码修改并冻结归因探针，再比较预测归因与实际行为、效用变化。',I+'alimama/归因引导的autoresearch/2.autoattribrec.png','闭环结构','<ol class="number-list"><li><strong>Attribution-Guided Search：</strong>显式定义机制、干预、探针和预期效应。</li><li><strong>Experiment Development：</strong>基于文献生成提案，用隔离 Patch 保证一次实验只验证一个机制。</li><li><strong>Verification + Reflection：</strong>完成提案、代码、实验三级校验；STM 保存配对证据，LTM 仅沉淀带条件和边界的认知。</li></ol>',[],[metric('+4.6pt','AIGB ACC30'),metric('49.83% → 44.13%','Uplift MAPE'),metric('AAAI','相关工作投稿')]),
+            slide('03 / 学术实验','跨数据集、初始化与骨干验证','在 3 个数据集、3 类初始化程序和 4 项指标上进行系统评估；主表、记忆迁移、核心模块和 LLM Backbone 消融共同验证鲁棒性。',I+'alimama/归因引导的autoresearch/3.学术实验.png','实验结论','<p>各设置平均提升 4.72%，跨实验迁移相对提升 10.40%；完整模型的失败率为 10%，显著低于移除关键模块后的 20%—40%。</p>',[],[metric('+4.72%','多设置平均提升'),metric('+10.40%','跨实验迁移相对提升'),metric('10%','完整模型失败率'),metric('3×3×4','数据集 × 初始化 × 指标')],['AutoAttribRec 论文','AIGB / Joint Uplift 自动迭代'])
+          ]
+        },
+        {
+          id:'joint-uplift-new',company:'阿里妈妈',palette:'coral',title:'Joint Uplift 多渠道联合分配',cover:I+'alimama/joint_uplift/封面图.png',label:'CAUSAL REALLOCATION',
+          contribution:'用 ReAlloc 快慢因果 Teacher–Student 学习支持域内的局部边际收益，在预算单纯形上保守重分配。',tags:['Causal Uplift','Teacher–Student','Support-aware'],cardMetrics:[metric('+3.5%','Pay Orders'),metric('+3.2pt','平台收入'),metric('30 万','线上商品')],
+          slides:[
+            slide('01 / 业务问题','逐渠道建模无法得到联合最优','广告、优惠券和权益之间同时存在替代、挤出与协同；独立 Uplift 忽略跨渠道交互，而全局 PTO 又会把支持域外误差放大成激进策略。',I+'alimama/joint_uplift/1.分渠道建模的问题.png','决策边界','<ol class="number-list"><li><strong>局部斜率：</strong>历史分配附近的响应方向可被数据识别，适合指导小步重分配。</li><li><strong>外推风险：</strong>全局最优点可能来自训练支持域之外，是模型误差制造的“虚假最优”。</li><li><strong>支持域路径：</strong>ReAlloc 从当前预算出发，沿可靠局部方向迭代，并在离开支持域前停止。</li></ol>'),
+            slide('02 / 模型与收益','ReAlloc 快慢因果 Teacher–Student','Fast Orthogonal Teacher 通过 OOF 去混杂学习局部响应；Slow Student 用局部扰动与 Replay 蒸馏稳定、可积的边际收益场；Support-aware Policy 只执行超过阈值的可靠动作。',I+'alimama/joint_uplift/2.joint_uplift模型.png','线上实验','<p>14 天、30 万商品线上 A/B 验证：订单与平台收入显著提升，同时 GMV 与总成本下降，利润率改善，体现重分配而非单纯加大投放。</p>',[],[metric('+3.5%','Pay Orders'),metric('−2.6%','GMV'),metric('−2.5%','Total Cost'),metric('+1.42pt','Profit Margin'),metric('+3.2pt','Platform Income'),metric('14 天 / 30 万','线上 A/B')],['营销托管业务上线','Multi-channel Uplift 技术方案'],[{label:'方案 PDF ↗',href:A+'Multi_channel_Uplift.pdf'}])
+          ]
+        }
+      ];
+
+      const papers = [
+        {id:'paper-uno-new',palette:'violet',label:'AAAI ORAL · 共同一作',title:'UNO! UNified Offline Training Paradigm for Learning Path Recommendation',cover:P+'uno/2.UniLPR框架.png',contribution:'将长期知识状态、题目结构与 KT 学生环境统一到离线训练范式，以稠密过程奖励驱动 GRPO。',tags:['Generative Rec','GRPO','Knowledge Tracing'],cardMetrics:[metric('AAAI Oral','录用形式'),metric('共同一作','个人角色'),metric('3 类','行为模式')],slides:[
+          slide('01 / 研究背景','匿名 Session 与稀疏奖励的局限','传统学习路径推荐多从匿名 Session 构造样本，忽略学生长期知识积累；只看最终结果又难以衡量单道题的真实教学价值。',P+'uno/1.背景.png','问题与目标','<ol class="number-list"><li><strong>长期个性化：</strong>用完整题目—表现历史替代短 Session，刻画稳定知识水平与动态需求。</li><li><strong>过程价值：</strong>将稀疏结果反馈转化为每一步可评价的学习收益。</li><li><strong>离线训练：</strong>在部署前通过学生模拟环境优化策略，降低真实在线探索成本。</li></ol>'),
+          slide('02 / 统一框架','知识水平、题目结构与策略优化','统一题目/表现序列，联合建模学生知识水平 KL 与题目知识结构 KS；DKT 环境提供逐步反馈，Personalized Advantage 驱动 GRPO。',P+'uno/2.UniLPR框架.png','方法对应','<ol class="number-list"><li><strong>共享序列主干：</strong>历史题目与作答表现共同进入 Causal Transformer，形成可持续更新的学习状态。</li><li><strong>双知识约束：</strong>KL Loss 约束学生知识水平，KS Loss 约束题目结构，避免只优化短期点击式目标。</li><li><strong>稠密奖励：</strong>DKT Environment / Reward Model 在每一步给出过程收益，GRPO 直接优化整条个性化路径。</li></ol>'),
+          slide('03 / 实验','多数据集与多行为模式稳定领先','在 Junyi 与 Assist09 上覆盖 rct、his、exp 三类行为模式和多种路径长度，对比传统 RL、生成式基线与序列推荐模型。',P+'uno/3.实验效果.png','结果解读','<p>UNO 在表格列出的不同数据集、行为模式和步数设置中均取得最优或显著领先结果，验证长期状态、KT 环境和 GRPO 统一训练的稳定性。</p>',[],[metric('2 个','公开数据集'),metric('3 类','行为模式'),metric('多步长','5 / 10 / 20 / 30')],['AAAI Oral','共同一作'],[{label:'论文主页 ↗',href:'https://ojs.aaai.org/index.php/AAAI/article/view/38591'}])
+        ]},
+        {id:'paper-mtfm-new',palette:'blue',label:'TECH REPORT · 共同作者',title:'MTFM: A Scalable and Alignment-free Foundation Model for Industrial Recommendation in Meituan',cover:I+'meituan/proj1_mtfm/2.MTFM架构图.png',contribution:'以 User-level 样本、Alignment-free 异构 Token 与高效注意力构建多场景统一推荐基础模型。',tags:['Foundation Ranking','Scaling','HSTU'],cardMetrics:[metric('100TB','训练数据'),metric('0.2B→0.8B','模型规模'),metric('+100%','训练吞吐')],slides:[
+          slide('01 / 统一模型','Alignment-free 多业务主干','论文将行为、用户和候选目标表示为异构 Token，经共享 HSTU 与业务任务头完成统一建模。',I+'meituan/proj1_mtfm/2.MTFM架构图.png','论文贡献','<ol class="number-list"><li>User-level 样本降低重复存储与用户计算。</li><li>Alignment-free Token 化避免跨场景强制槽位对齐造成的信息损失。</li><li>共享 HSTU + 业务 MMoE 在迁移能力与目标解耦之间取得平衡。</li></ol>'),
+          slide('02 / 高效扩展','从注意力结构到系统效率','HTA / SCTA、GQA、Semi-local Attention 与 SwiGLU 协同降低全量注意力和 KV 开销。',I+'meituan/proj2_scaling/1.HTA&SCTA.png','效率贡献','<p>结构设计以真实吞吐和在线 TP99 为约束，使参数量扩展不会被训练与推理成本抵消。</p>',[],[metric('+100%','训练吞吐'),metric('−30%','推理 TP99'),metric('AUC 持平','效果约束')]),
+          slide('03 / 实验','Scaling Law 与线上结果','跨三类场景验证推理 GFLOPs、训练数据和参数规模的 Scaling 趋势，并给出多业务线上收益。',I+'meituan/proj1_mtfm/4.多场景业务收益.png','论文结果','<p>统一模型在 SQS 与 PHF 同时提升 CTR、转化与订单，并降低延迟，证明工业推荐 Scaling 能同时服务效果与部署效率。</p>',[],[metric('+1.89%','SQS CTR'),metric('+2.98%','SQS Orders'),metric('+1.53%','PHF CTR')],['Technical Report','共同作者'],[{label:'arXiv v1 ↗',href:'https://arxiv.org/abs/2602.11235v1'}])
+        ]},
+        {id:'paper-diffusion-new',palette:'cyan',label:'SHM Q1 · 第一作者',title:'A Conditional Diffusion-Based Method for Missing Data Imputation in Tunnel Monitoring',cover:P+'diffusion/1.模型框架图.png',contribution:'以条件扩散和门控时序—特征注意力恢复高缺失率多变量隧道监测序列。',tags:['Diffusion','Imputation','Time Series'],cardMetrics:[metric('−46.73%','50% 缺失 CRPS'),metric('−32.46%','70% 缺失 CRPS'),metric('第一作者','个人角色')],slides:[
+          slide('01 / 模型','条件扩散填补与双维注意力','以观测值、缺失掩码和环境侧信息为条件，从随机噪声反向去噪恢复缺失片段；残差层内并行建模时间与跨传感器依赖。',P+'diffusion/1.模型框架图.png','方法对应','<ol class="number-list"><li><strong>非自回归恢复：</strong>扩散去噪避免逐点预测的误差累积。</li><li><strong>条件输入：</strong>观测值与侧信息约束反向过程，使高缺失率下仍保留真实工况。</li><li><strong>门控双注意力：</strong>Temporal / Spatial Transformer 经 Sigmoid 与 Tanh 门控融合，联合捕获时间和变量关系。</li></ol>'),
+          slide('02 / 实验','确定性与概率填补均达到最优','在 30%、50%、70% 缺失率下比较统计、树模型、RNN、Transformer 与扩散基线，并通过消融验证时间、特征与条件模块。',P+'diffusion/2.实验.png','结果解读','<p>确定性实验中 MAE / RMSE 均为最优；概率填补 CRPS 在 50% 与 70% 缺失率下分别改善 46.73% 与 32.46%，高缺失场景优势更明显。</p>',[],[metric('−46.73%','50% 缺失 CRPS'),metric('−32.46%','70% 缺失 CRPS'),metric('30% / 50% / 70%','缺失率覆盖')],['SHM Q1','第一作者'],[{label:'期刊论文 ↗',href:'https://onlinelibrary.wiley.com/doi/10.1155/stc/6629515'}])
+        ]},
+        {id:'paper-autoattrib-new',palette:'teal',label:'AAAI 2027 在投 · 第一作者',title:'AutoAttribRec: Attribution-Guided Self-Evolving Research for Recommender Systems',cover:I+'alimama/归因引导的autoresearch/2.autoattribrec.png',contribution:'通过三级归因验证与分层可信记忆，把自动实验升级为可解释、可自修正的研究过程。',tags:['Agent4Rec','AutoResearch','Attribution'],cardMetrics:[metric('+4.72%','平均提升'),metric('+10.40%','迁移提升'),metric('10%','失败率')],slides:[
+          slide('01 / 动机','从“分数上涨”到“机制成立”','论文指出 Score-only AutoResearch 会将噪声和耦合改动写入记忆；归因式搜索则用行为探针验证机制，再决定是否复用结论。',I+'alimama/归因引导的autoresearch/1现有研究不足.png','核心问题','<p>稳定涨点只能说明结果可复现，不能证明计划中的机制真实生效；需要同时验证代码干预、行为变化和效用变化。</p>'),
+          slide('02 / 框架','归因驱动自进化研究','搜索、实验开发、归因验证与认知反思组成闭环，STM 保存配对证据，LTM 保存带条件、边界和证据的可迁移认知。',I+'alimama/归因引导的autoresearch/2.autoattribrec.png','方法贡献','<ol class="number-list"><li>显式构造机制假设、隔离干预、行为探针和预期效应。</li><li>提案—代码—实验三级验证后形成 Verified Experimental Cognition。</li><li>通过认知 Gap 重构问题、检索文献并修正下一轮搜索。</li></ol>'),
+          slide('03 / 实验','主表、迁移与模块消融','跨数据集、初始化、LLM Backbone 和记忆迁移设置进行验证，完整模型在效果与失败率上保持稳定。',I+'alimama/归因引导的autoresearch/3.学术实验.png','论文结果','<p>各设置平均提升 4.72%，跨实验迁移相对提升 10.40%，完整框架失败率保持在 10%。</p>',[],[metric('+4.72%','平均提升'),metric('+10.40%','迁移提升'),metric('10%','失败率')],['AAAI 2027 在投','第一作者'],[{label:'论文 PDF ↗',href:A+'AutoAttribRec.pdf'}])
+        ]}
+      ];
+
+      const honors=[
+        {id:'honor-level',palette:'blue',title:'近 20 项荣誉奖励',subtitle:'世界级 1 项 · 国家级 2 项',detail:'本科阶段持续参与学科竞赛与综合评优，累计获得近 20 项荣誉。'},
+        {id:'honor-math',palette:'violet',title:'数理竞赛',subtitle:'数学竞赛连续三年一等奖 · 物理省二',detail:'以持续稳定的竞赛表现打牢概率统计、数值分析和复杂问题拆解能力。'},
+        {id:'honor-modeling',palette:'coral',title:'数学建模',subtitle:'美赛 M 奖 · 国赛省一等奖',detail:'覆盖建模假设、数据分析、算法求解、敏感性验证与中英文论文交付。'},
+        {id:'honor-campus',palette:'gold',title:'学业与综合荣誉',subtitle:'特等奖 · 奖学金 · 优秀毕业生',detail:'获学科竞赛特等奖、学业奖学金、三好学生、优秀毕业生与优秀志愿者等荣誉。'}
+      ].map((h,i)=>({...h,label:'HONOR '+String(i+1).padStart(2,'0'),contribution:h.detail,tags:[h.subtitle],slides:[slide('荣誉详情',h.title,h.subtitle,'','能力证明','<p>'+h.detail+'</p><ol class="number-list"><li>体现持续学习和复杂问题拆解能力。</li><li>形成从建模假设、实验验证到技术表达的完整习惯。</li><li>相关能力迁移到推荐建模、系统优化和因果决策实践。</li></ol>')]}));
+
+      const companyMeta={'美团':{code:'MT',role:'主站搜推算法组',period:'2025.04 — 2025.10',color:'#4f6fdc'},'快手':{code:'KS',role:'直播模型组',period:'2025.10 — 2026.01',color:'#e77866'},'字节跳动':{code:'BD',role:'TikTok Search',period:'2026.02 — 2026.05',color:'#8059c9'},'阿里妈妈':{code:'ALI',role:'营销托管 · 搜索广告',period:'2026.06 — 至今',color:'#119a8b'}};
+      function metricHTML(items){return items?.length?`<div class="card-metrics">${items.slice(0,3).map(m=>`<div><strong>${m.value}</strong><small>${m.label}</small></div>`).join('')}</div>`:'';}
+      function cardHTML(item,type='project'){const p=palettes[item.palette];return `<button class="content-card ${type}-card" type="button" data-story="${item.id}" style="--accent:${p.accent};--tint:${p.tint}">${item.cover?`<div class="card-cover" data-label="${item.label}"><img src="${item.cover}" alt="${item.title}核心技术图" loading="lazy"></div>`:''}<div class="card-body"><span class="card-kicker">${item.label}</span><h4>${item.title}</h4><p class="card-contribution"><strong>核心贡献：</strong>${item.contribution}</p><div class="tag-row">${(item.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>${metricHTML(item.cardMetrics)}<div class="card-action"><span>${type==='paper'?'逐屏查看论文':'逐屏查看项目'}</span><span>↗</span></div></button>`;}
+      const groupRoot=document.getElementById('project-groups');
+      Object.entries(companyMeta).forEach(([company,meta])=>{const items=projects.filter(p=>p.company===company);groupRoot.insertAdjacentHTML('beforeend',`<section class="company-group" style="--company-color:${meta.color}"><header class="company-head"><div class="company-head__identity"><span class="company-mark">${meta.code}</span><div><h3>${company}</h3><p>${meta.role} · ${items.length} 个独立项目</p></div></div><time>${meta.period}</time></header><div class="project-grid">${items.map(i=>cardHTML(i)).join('')}</div></section>`);});
+      document.getElementById('paper-grid').innerHTML=papers.map(p=>cardHTML(p,'paper')).join('');
+      document.getElementById('honor-grid').innerHTML=honors.map((h,i)=>{const p=palettes[h.palette];return `<button class="content-card honor-card" type="button" data-story="${h.id}" style="--accent:${p.accent};--tint:${p.tint}"><span class="honor-card__index">${String(i+1).padStart(2,'0')}</span><h4>${h.title}</h4><p>${h.subtitle}</p><div class="card-action"><span>查看详情</span><span>↗</span></div></button>`}).join('');
+
+      const allItems=[...projects,...papers,...honors],modal=document.getElementById('story-modal'),dialog=modal.querySelector('.modal__dialog'),stage=document.getElementById('story-stage'),modalTitle=document.getElementById('modal-title'),modalProgress=document.getElementById('modal-progress'),dots=document.getElementById('slide-dots'),prev=document.getElementById('prev-slide'),next=document.getElementById('next-slide'),closeButton=modal.querySelector('.modal__close'),lightbox=document.getElementById('lightbox'),lightboxImg=document.getElementById('lightbox-img'),lightboxClose=lightbox.querySelector('.lightbox__close');
+      let active=null,index=0,lastTrigger=null,touchStart=null;
+      function galleryHTML(images){return images?.length?`<div class="figure-gallery">${images.map(i=>`<figure class="figure-card${i.wide?' figure-card--wide':''}"><a href="${i.src}" target="_blank" rel="noreferrer"><img src="${i.src}" alt="${i.caption}" loading="lazy"></a><figcaption>${i.caption}</figcaption></figure>`).join('')}</div>`:'';}
+      function resultsHTML(items){return items?.length?`<div class="story-chips">${items.map(m=>`<div class="story-chip"><strong>${m.value}</strong><span>${m.label}</span></div>`).join('')}</div>`:'';}
+      function outputsHTML(outputs,links){const list=[...(outputs||[]).map(x=>`<li>${x}</li>`),...(links||[]).map(x=>`<a href="${x.href}" target="_blank" rel="noreferrer">${x.label}</a>`)];return list.length?`<ul class="output-list">${list.join('')}</ul>`:'';}
+      function renderSlide(){const s=active.slides[index],p=palettes[active.palette];dialog.style.setProperty('--story-accent',p.accent);dialog.style.setProperty('--story-tint',p.tint);modalTitle.textContent=active.title;modalProgress.textContent=`${String(index+1).padStart(2,'0')} / ${String(active.slides.length).padStart(2,'0')}`;const results=resultsHTML(s.metrics),outputs=outputsHTML(s.outputs,s.links),cap=s.images&&s.images[0]?s.images[0].caption:'';stage.innerHTML=`<article class="story-slide"><div class="story-pane story-pane--copy"><span class="story-step">${s.step} · ${s.bodyTitle}</span><h2>${s.title}</h2><p class="story-lead">${s.lead}</p><div class="story-copy">${s.body}</div>${results||''}${outputs||''}${s.note?`<p class="story-note">${s.note}</p>`:''}</div><div class="story-pane story-pane--figure"><figure class="story-figure">${s.cover?`<img src="${s.cover}" alt="${s.title}技术示意图">`:`<div class="monogram">ZW</div>`}${cap?`<figcaption>${cap}</figcaption>`:''}</figure></div></article>`;dots.innerHTML=active.slides.map((_,i)=>`<button class="slide-dot${i===index?' is-active':''}" type="button" data-slide-index="${i}" aria-label="切换到第 ${i+1} 屏"></button>`).join('');prev.disabled=index===0;next.disabled=index===active.slides.length-1;modal.scrollTop=0;}
+      function openStory(trigger){active=allItems.find(i=>i.id===trigger.dataset.story);if(!active)return;index=0;lastTrigger=trigger;modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');renderSlide();closeButton.focus();}
+      function closeStory(){if(!modal.classList.contains('is-open'))return;closeLightbox();modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');stage.replaceChildren();if(lastTrigger)lastTrigger.focus();}
+      function openLightbox(src){if(!src)return;lightboxImg.src=src;lightbox.classList.add('is-open');lightbox.setAttribute('aria-hidden','false');}
+      function closeLightbox(){if(!lightbox.classList.contains('is-open'))return;lightbox.classList.remove('is-open');lightbox.setAttribute('aria-hidden','true');lightboxImg.src='';}
+      function go(delta){const target=Math.max(0,Math.min(active.slides.length-1,index+delta));if(target===index)return;index=target;renderSlide();}
+      document.addEventListener('click',e=>{const card=e.target.closest('[data-story]');if(card)openStory(card);const dot=e.target.closest('[data-slide-index]');if(dot){index=Number(dot.dataset.slideIndex);renderSlide();}});
+      prev.addEventListener('click',()=>go(-1));next.addEventListener('click',()=>go(1));closeButton.addEventListener('click',closeStory);modal.addEventListener('click',e=>{if(e.target===modal)closeStory();});
+      stage.addEventListener('click',e=>{const fig=e.target.closest('.story-figure');if(fig){const im=fig.querySelector('img');if(im){e.preventDefault();openLightbox(im.src);}}});
+      lightboxClose.addEventListener('click',closeLightbox);
+      lightbox.addEventListener('click',e=>{if(e.target===lightbox)closeLightbox();});
+      document.addEventListener('keydown',e=>{if(!modal.classList.contains('is-open'))return;if(lightbox.classList.contains('is-open')){if(e.key==='Escape')closeLightbox();return;}if(e.key==='Escape')closeStory();if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1);});
+      dialog.addEventListener('touchstart',e=>{const t=e.changedTouches[0];touchStart={x:t.clientX,y:t.clientY};},{passive:true});
+      dialog.addEventListener('touchend',e=>{if(!touchStart)return;const t=e.changedTouches[0],dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;touchStart=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.35)go(dx<0?1:-1);},{passive:true});
+      const mobileNav=document.getElementById('mobile-nav');mobileNav.addEventListener('change',()=>document.getElementById(mobileNav.value)?.scrollIntoView({behavior:'smooth'}));
+      const navLinks=[...document.querySelectorAll('.side-nav nav a')],sections=[...document.querySelectorAll('[data-section]')];const observer=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;navLinks.forEach(l=>l.classList.toggle('is-active',l.getAttribute('href')===`#${visible.target.id}`));mobileNav.value=visible.target.id;},{rootMargin:'-18% 0px -65% 0px',threshold:[0,.2,.5]});sections.forEach(s=>observer.observe(s));
+    })();
+  </script>
+</body>
+</html>
